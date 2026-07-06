@@ -1,9 +1,10 @@
 {
   "domain": "object_monitor",
   "name": "Object Monitor",
-  "codeowners": [],
+  "codeowners": ["@rodion981"],
   "config_flow": true,
-  "documentation": "https://github.com/custom-components/object_monitor",
+  "documentation": "https://github.com/rodion981/object-monitor",
+  "issue_tracker": "https://github.com/rodion981/object-monitor/issues",
   "integration_type": "hub",
   "iot_class": "local_push",
   "requirements": [],

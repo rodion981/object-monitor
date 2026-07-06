@@ -72,7 +72,7 @@ class LabelResolver:
                 entity_id=entity_id,
                 labels=normalized_labels,
                 status=LabelResolutionStatus.MULTIPLE_OBJECTS,
-                reason="multiple_object_labels",
+                reason=f"multiple_object_labels: {', '.join(object_matches)}",
             )
 
         category_matches = sorted(normalized_labels & SUPPORTED_CATEGORIES)

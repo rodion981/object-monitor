@@ -30,7 +30,8 @@
       "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
       "invalid_notification_provider": "Непідтримуваний провайдер сповіщень.",
       "object_labels_required": "Потрібен хоча б один label об'єкта.",
-      "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores."
+      "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores.",
+      "reserved_object_label": "Labels об'єктів не можуть бути device_monitoring або категоріями security, light чи climate."
     },
     "abort": {
       "single_instance_allowed": "Object Monitor уже налаштовано."
@@ -66,7 +67,8 @@
       "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
       "invalid_notification_provider": "Непідтримуваний провайдер сповіщень.",
       "object_labels_required": "Потрібен хоча б один label об'єкта.",
-      "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores."
+      "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores.",
+      "reserved_object_label": "Labels об'єктів не можуть бути device_monitoring або категоріями security, light чи climate."
     }
   },
   "selector": {

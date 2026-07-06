@@ -65,6 +65,8 @@ class TestLabelResolver(unittest.TestCase):
 
         self.assertEqual(labels.status, LabelResolutionStatus.MULTIPLE_OBJECTS)
         self.assertFalse(labels.is_monitored)
+        self.assertIn("hotel_kyiv", labels.reason)
+        self.assertIn("qirim", labels.reason)
 
     def test_multiple_categories_keep_monitoring_with_category_error(self) -> None:
         """Category ambiguity does not disable monitoring itself."""

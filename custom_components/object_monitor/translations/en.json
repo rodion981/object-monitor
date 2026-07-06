@@ -30,7 +30,8 @@
       "invalid_notification_mode": "Unsupported notification mode.",
       "invalid_notification_provider": "Unsupported notification provider.",
       "object_labels_required": "At least one object label is required.",
-      "invalid_object_label": "Object labels may contain only lowercase letters, numbers, and underscores."
+      "invalid_object_label": "Object labels may contain only lowercase letters, numbers, and underscores.",
+      "reserved_object_label": "Object labels cannot be device_monitoring or category labels such as security, light, or climate."
     },
     "abort": {
       "single_instance_allowed": "Object Monitor is already configured."
@@ -66,7 +67,8 @@
       "invalid_notification_mode": "Unsupported notification mode.",
       "invalid_notification_provider": "Unsupported notification provider.",
       "object_labels_required": "At least one object label is required.",
-      "invalid_object_label": "Object labels may contain only lowercase letters, numbers, and underscores."
+      "invalid_object_label": "Object labels may contain only lowercase letters, numbers, and underscores.",
+      "reserved_object_label": "Object labels cannot be device_monitoring or category labels such as security, light, or climate."
     }
   },
   "selector": {

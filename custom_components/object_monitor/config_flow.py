@@ -26,14 +26,17 @@ from .const import (
     DEFAULT_NOTIFICATION_PROVIDER,
     DEFAULT_TIMEOUT_SECONDS,
     DOMAIN,
+    LABEL_DEVICE_MONITORING,
     NOTIFICATION_MODE_CATEGORY_ROUTING,
     NOTIFICATION_MODE_SINGLE_ROUTING,
     PROVIDER_TELEGRAM,
+    SUPPORTED_CATEGORIES,
 )
 
 MIN_TIMEOUT_SECONDS = 1
 MAX_TIMEOUT_SECONDS = 86_400
 LABEL_PATTERN = re.compile(r"^[a-z0-9_]+$")
+RESERVED_LABELS = frozenset({LABEL_DEVICE_MONITORING, *SUPPORTED_CATEGORIES})
 
 
 class ObjectMonitorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -216,6 +219,8 @@ def _validate_user_input(
         errors[CONF_OBJECT_LABELS] = "object_labels_required"
     elif any(not LABEL_PATTERN.fullmatch(label) for label in object_labels):
         errors[CONF_OBJECT_LABELS] = "invalid_object_label"
+    elif any(label in RESERVED_LABELS for label in object_labels):
+        errors[CONF_OBJECT_LABELS] = "reserved_object_label"
 
     options = {
         CONF_MONITORING_TIMEOUT: timeout or DEFAULT_TIMEOUT_SECONDS,

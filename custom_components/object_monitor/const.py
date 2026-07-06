@@ -15,6 +15,7 @@ DEFAULT_DEBUG_LOGGING: Final = False
 DEFAULT_HEARTBEAT_INTERVAL_SECONDS: Final = 0
 
 DEFAULT_MONITORING_LABEL: Final = "device_monitoring"
+SECURITY_SYSTEM_LABEL: Final = "security_system"
 
 CATEGORY_SECURITY: Final = "security"
 CATEGORY_LIGHT: Final = "light"
@@ -54,6 +55,9 @@ EVENT_OBJECT_MONITOR: Final = f"{DOMAIN}_event"
 EVENT_ENTITY_REGISTRY_UPDATED: Final = "entity_registry_updated"
 EVENT_TYPE_OFFLINE: Final = "offline"
 EVENT_TYPE_RECOVERY: Final = "recovery"
+EVENT_TYPE_SECURITY_STATE: Final = "security_state"
+
+ALARM_CONTROL_PANEL_DOMAIN: Final = "alarm_control_panel"
 
 STATE_UNAVAILABLE: Final = "unavailable"
 STATE_UNKNOWN: Final = "unknown"

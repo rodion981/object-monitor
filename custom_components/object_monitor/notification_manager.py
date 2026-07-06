@@ -7,8 +7,8 @@ import logging
 from homeassistant.core import HomeAssistant
 
 from .models import (
+    MonitorNotificationEvent,
     MonitorConfig,
-    NotificationEvent,
     NotificationResult,
     ProviderType,
 )
@@ -27,7 +27,10 @@ class NotificationManager:
         self._config = config
         self._provider = self._build_provider(config.notification_provider)
 
-    async def async_notify(self, event: NotificationEvent) -> NotificationResult:
+    async def async_notify(
+        self,
+        event: MonitorNotificationEvent,
+    ) -> NotificationResult:
         """Send a provider-neutral notification event."""
         result = await self._provider.async_send(event)
 

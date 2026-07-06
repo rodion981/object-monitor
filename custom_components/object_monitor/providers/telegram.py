@@ -12,11 +12,14 @@ from ..const import (
     TELEGRAM_SCRIPT_PREFIX,
 )
 from ..models import (
+    MonitorNotificationEvent,
     MonitorConfig,
     NotificationEvent,
     NotificationEventType,
     NotificationMode,
     NotificationResult,
+    SecurityStateEvent,
+    SecuritySystemState,
 )
 from .base import NotificationProvider
 
@@ -31,7 +34,7 @@ class TelegramProvider(NotificationProvider):
         self._hass = hass
         self._config = config
 
-    async def async_send(self, event: NotificationEvent) -> NotificationResult:
+    async def async_send(self, event: MonitorNotificationEvent) -> NotificationResult:
         """Send a notification through the configured Telegram script route."""
         script_entity_id = self._script_entity_id(event)
 
@@ -98,8 +101,22 @@ def _script_service_name(script_entity_id: str) -> str:
     return script_entity_id.split(".", 1)[1]
 
 
-def _format_message(event: NotificationEvent, config: MonitorConfig) -> str:
+def _format_message(
+    event: MonitorNotificationEvent,
+    config: MonitorConfig,
+) -> str:
     """Format an Object Monitor event as a Telegram message."""
+    if isinstance(event, SecurityStateEvent):
+        return _format_security_message(event, config)
+
+    return _format_availability_message(event, config)
+
+
+def _format_availability_message(
+    event: NotificationEvent,
+    config: MonitorConfig,
+) -> str:
+    """Format an availability event as a Telegram message."""
     object_name = config.object_display_name(event.object_label)
     category = (
         config.category_display_name(event.category)
@@ -121,3 +138,112 @@ def _format_message(event: NotificationEvent, config: MonitorConfig) -> str:
         f"Категорія: {category}\n"
         f"Сутність: {event.entity_id}"
     )
+
+
+def _format_security_message(
+    event: SecurityStateEvent,
+    config: MonitorConfig,
+) -> str:
+    """Format a security system state event as a Telegram message."""
+    object_name = config.object_display_name(event.object_label)
+    details = _security_state_details(event.state)
+    title = details["title"]
+    if (
+        event.previous_state is SecuritySystemState.UNAVAILABLE
+        and event.state is not SecuritySystemState.UNAVAILABLE
+    ):
+        title = "\U0001f7e2 Зв'язок із системою охорони відновлено"
+
+    lines = [
+        title,
+        "",
+        f"Об'єкт: {object_name}",
+        "",
+    ]
+
+    if details["mode"]:
+        lines.extend(["Режим:", details["mode"], ""])
+
+    lines.extend(
+        [
+            "Стан:",
+            details["state"],
+            "",
+            "Сутність:",
+            event.entity_id,
+        ]
+    )
+
+    if event.notified_at is not None:
+        lines.extend(["", "Час:", event.notified_at.astimezone().strftime("%H:%M")])
+
+    if details["priority"]:
+        lines.extend(["", details["priority"]])
+
+    return "\n".join(lines)
+
+
+def _security_state_details(state: SecuritySystemState) -> dict[str, str]:
+    """Return user-facing message parts for a security system state."""
+    return {
+        SecuritySystemState.DISARMED: {
+            "title": "\U0001f513 Систему охорони знято",
+            "mode": "",
+            "state": "Знято з охорони",
+            "priority": "",
+        },
+        SecuritySystemState.ARMED_HOME: {
+            "title": "\U0001f3e0 Увімкнено режим вдома",
+            "mode": "Вдома",
+            "state": "Під охороною",
+            "priority": "",
+        },
+        SecuritySystemState.ARMED_AWAY: {
+            "title": "\U0001f6e1 Систему охорони увімкнено",
+            "mode": "Немає вдома",
+            "state": "Під охороною",
+            "priority": "",
+        },
+        SecuritySystemState.ARMED_NIGHT: {
+            "title": "\U0001f319 Увімкнено нічний режим",
+            "mode": "Ніч",
+            "state": "Під охороною",
+            "priority": "",
+        },
+        SecuritySystemState.ARMED_VACATION: {
+            "title": "\U0001f6e1 Увімкнено режим відпустки",
+            "mode": "Відпустка",
+            "state": "Під охороною",
+            "priority": "",
+        },
+        SecuritySystemState.ARMING: {
+            "title": "\u23f3 Система охорони вмикається",
+            "mode": "",
+            "state": "Вмикається",
+            "priority": "",
+        },
+        SecuritySystemState.PENDING: {
+            "title": "\u26a0 Почалась затримка входу/виходу",
+            "mode": "",
+            "state": "Затримка",
+            "priority": "",
+        },
+        SecuritySystemState.TRIGGERED: {
+            "title": "\U0001f6a8 ТРИВОГА ОХОРОНИ",
+            "mode": "",
+            "state": "Тривога",
+            "priority": "Високий пріоритет.",
+        },
+        SecuritySystemState.UNKNOWN: {
+            "title": "\u26a0 Стан системи охорони невідомий",
+            "mode": "",
+            "state": "Невідомо",
+            "priority": "",
+        },
+        SecuritySystemState.UNAVAILABLE: {
+            "title": "\U0001f534 Система охорони недоступна",
+            "mode": "",
+            "state": "Недоступна",
+            "priority": "",
+        },
+    }[state]

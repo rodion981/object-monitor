@@ -41,6 +41,7 @@ from .models import (
 )
 from .monitor import ObjectMonitor
 from .notification_manager import NotificationManager
+from .security_monitor import SecurityMonitor
 from .storage import ObjectMonitorStore
 
 _LOGGER = logging.getLogger(__name__)
@@ -59,6 +60,7 @@ class ObjectMonitorRuntime:
         self.notification_manager = NotificationManager(hass, self.config)
         self.tracker: EntityTracker | None = None
         self.monitor: ObjectMonitor | None = None
+        self.security_monitor: SecurityMonitor | None = None
 
     async def async_start(self) -> None:
         """Start all Object Monitor runtime components."""
@@ -89,6 +91,12 @@ class ObjectMonitorRuntime:
         self.tracker.set_event_callback(self.monitor.async_fire_monitor_event)
 
         await self.monitor.async_start()
+        self.security_monitor = SecurityMonitor(
+            self.hass,
+            self.config,
+            self.notification_manager,
+        )
+        await self.security_monitor.async_start()
         _LOGGER.debug("Object Monitor runtime started")
 
     async def async_stop(self) -> None:
@@ -96,6 +104,10 @@ class ObjectMonitorRuntime:
         if self.monitor is not None:
             await self.monitor.async_stop()
             self.monitor = None
+
+        if self.security_monitor is not None:
+            await self.security_monitor.async_stop()
+            self.security_monitor = None
 
         if self.tracker is not None:
             await self.tracker.async_shutdown()
@@ -107,6 +119,8 @@ class ObjectMonitorRuntime:
         """Reconcile monitored entities from current registry and state."""
         if self.monitor is not None:
             await self.monitor.async_reconcile()
+        if self.security_monitor is not None:
+            await self.security_monitor.async_reconcile()
 
     async def async_clear_entity_state(self, entity_id: str) -> None:
         """Clear stored and in-memory monitor state for one entity."""
@@ -157,6 +171,9 @@ class ObjectMonitorRuntime:
             else 0,
             "offline_entities": self.tracker.offline_count
             if self.tracker is not None
+            else 0,
+            "security_tracked_entities": self.security_monitor.tracked_count
+            if self.security_monitor is not None
             else 0,
         }
 

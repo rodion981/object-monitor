@@ -15,6 +15,7 @@ from .const import (
     DEFAULT_NOTIFICATION_MODE,
     DEFAULT_NOTIFICATION_PROVIDER,
     DEFAULT_TIMEOUT_SECONDS,
+    EVENT_TYPE_SECURITY_STATE,
 )
 
 
@@ -36,6 +37,21 @@ class NotificationEventType(StrEnum):
 
     OFFLINE = "offline"
     RECOVERY = "recovery"
+
+
+class SecuritySystemState(StrEnum):
+    """Supported security system states."""
+
+    DISARMED = "disarmed"
+    ARMED_HOME = "armed_home"
+    ARMED_AWAY = "armed_away"
+    ARMED_NIGHT = "armed_night"
+    ARMED_VACATION = "armed_vacation"
+    ARMING = "arming"
+    PENDING = "pending"
+    TRIGGERED = "triggered"
+    UNKNOWN = "unknown"
+    UNAVAILABLE = "unavailable"
 
 
 class LabelResolutionStatus(StrEnum):
@@ -152,6 +168,37 @@ class NotificationEvent:
             "notified_at": self.notified_at.isoformat() if self.notified_at else None,
             "timeout_seconds": self.timeout_seconds,
         }
+
+
+@dataclass(slots=True, frozen=True)
+class SecurityStateEvent:
+    """Provider-neutral event emitted by security system monitoring."""
+
+    entity_id: str
+    friendly_name: str
+    object_label: str
+    previous_state: SecuritySystemState | None
+    state: SecuritySystemState
+    category: str = "security"
+    notified_at: datetime | None = None
+
+    def as_event_data(self) -> dict[str, Any]:
+        """Return serializable data suitable for the Home Assistant event bus."""
+        return {
+            "event_type": EVENT_TYPE_SECURITY_STATE,
+            "entity_id": self.entity_id,
+            "friendly_name": self.friendly_name,
+            "object_label": self.object_label,
+            "category": self.category,
+            "previous_state": self.previous_state.value
+            if self.previous_state
+            else None,
+            "state": self.state.value,
+            "notified_at": self.notified_at.isoformat() if self.notified_at else None,
+        }
+
+
+MonitorNotificationEvent = NotificationEvent | SecurityStateEvent
 
 
 @dataclass(slots=True, frozen=True)

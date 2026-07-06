@@ -8,6 +8,7 @@ The integration is event-driven and uses Home Assistant labels. Label roles are 
 - Configured object labels, such as `home`, `restaurant`, or `cafe`, identify the monitored object.
 - Optional category labels can route notifications to Telegram topics. Defaults: `security`, `light`, `climate`.
 - Optional display names let notifications show human-friendly object and category names while labels and scripts remain stable Latin IDs.
+- Security systems can be monitored with the `security_system` label.
 
 ## Installation with HACS
 
@@ -92,6 +93,28 @@ device_monitoring
 home
 security
 ```
+
+## Security System Monitoring
+
+To monitor an alarm panel, add these labels to an `alarm_control_panel` entity:
+
+```text
+security_system
+home
+```
+
+`home` must be one of the configured object labels.
+
+Security state notifications use the same Telegram routing as availability notifications:
+
+```text
+script.tg_home
+script.tg_home_security
+```
+
+Supported states include `disarmed`, `armed_home`, `armed_away`, `armed_night`, `armed_vacation`, `arming`, `pending`, `triggered`, `unknown`, and `unavailable`.
+
+Version `v0.1.5` is the last release before security system monitoring and can be selected in HACS if you need to roll back.
 
 ## Services
 

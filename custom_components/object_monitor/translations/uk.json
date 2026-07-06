@@ -1,0 +1,85 @@
+{
+  "title": "Object Monitor",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Налаштування Object Monitor",
+        "description": "Налаштуйте labels об'єктів і маршрутизацію сповіщень.",
+        "data": {
+          "monitoring_timeout": "Таймаут моніторингу",
+          "notification_mode": "Режим сповіщень",
+          "object_labels": "Labels об'єктів",
+          "notification_provider": "Провайдер сповіщень",
+          "heartbeat_interval": "Інтервал heartbeat",
+          "debug_logging": "Debug-логування"
+        },
+        "data_description": {
+          "monitoring_timeout": "Кількість секунд, протягом яких entity має залишатися unavailable перед offline-сповіщенням.",
+          "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
+          "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад qirim або hotel_kyiv.",
+          "notification_provider": "Провайдер доставки сповіщень.",
+          "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
+          "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
+        }
+      }
+    },
+    "error": {
+      "invalid_timeout": "Таймаут має бути додатним числом.",
+      "timeout_too_large": "Таймаут завеликий.",
+      "invalid_heartbeat_interval": "Інтервал heartbeat має бути 0 або додатним числом.",
+      "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
+      "invalid_notification_provider": "Непідтримуваний провайдер сповіщень.",
+      "object_labels_required": "Потрібен хоча б один label об'єкта.",
+      "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores."
+    },
+    "abort": {
+      "single_instance_allowed": "Object Monitor уже налаштовано."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Опції Object Monitor",
+        "description": "Оновіть таймаут моніторингу, labels об'єктів і маршрутизацію сповіщень.",
+        "data": {
+          "monitoring_timeout": "Таймаут моніторингу",
+          "notification_mode": "Режим сповіщень",
+          "object_labels": "Labels об'єктів",
+          "notification_provider": "Провайдер сповіщень",
+          "heartbeat_interval": "Інтервал heartbeat",
+          "debug_logging": "Debug-логування"
+        },
+        "data_description": {
+          "monitoring_timeout": "Кількість секунд, протягом яких entity має залишатися unavailable перед offline-сповіщенням.",
+          "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
+          "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад qirim або hotel_kyiv.",
+          "notification_provider": "Провайдер доставки сповіщень.",
+          "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
+          "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
+        }
+      }
+    },
+    "error": {
+      "invalid_timeout": "Таймаут має бути додатним числом.",
+      "timeout_too_large": "Таймаут завеликий.",
+      "invalid_heartbeat_interval": "Інтервал heartbeat має бути 0 або додатним числом.",
+      "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
+      "invalid_notification_provider": "Непідтримуваний провайдер сповіщень.",
+      "object_labels_required": "Потрібен хоча б один label об'єкта.",
+      "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores."
+    }
+  },
+  "selector": {
+    "notification_mode": {
+      "options": {
+        "single_routing": "Один маршрут",
+        "category_routing": "Маршрутизація за категоріями"
+      }
+    },
+    "notification_provider": {
+      "options": {
+        "telegram": "Telegram"
+      }
+    }
+  }
+}

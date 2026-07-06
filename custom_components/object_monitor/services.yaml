@@ -1,0 +1,59 @@
+send_test_notification:
+  name: Send test notification
+  description: Send a test Object Monitor notification through the configured provider.
+  fields:
+    object_label:
+      required: true
+      selector:
+        text: {}
+      name: Object label
+      description: Configured object label, for example qirim or hotel_kyiv.
+    category:
+      required: false
+      selector:
+        select:
+          options:
+            - security
+            - light
+            - climate
+      name: Category
+      description: Optional category used by category routing.
+    event_type:
+      required: false
+      default: offline
+      selector:
+        select:
+          options:
+            - offline
+            - recovery
+      name: Event type
+      description: Type of test notification to send.
+    entity_id:
+      required: false
+      default: sensor.object_monitor_test
+      selector:
+        text: {}
+      name: Entity ID
+      description: Entity ID shown in the test notification.
+    friendly_name:
+      required: false
+      default: Object Monitor Test
+      selector:
+        text: {}
+      name: Friendly name
+      description: Friendly name shown in the test notification.
+
+reload_monitored_entities:
+  name: Reload monitored entities
+  description: Reconcile Object Monitor labels, current states, and stored monitor state.
+
+clear_entity_state:
+  name: Clear entity state
+  description: Clear stored Object Monitor state for one entity.
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity: {}
+      name: Entity
+      description: Entity whose Object Monitor state should be cleared.

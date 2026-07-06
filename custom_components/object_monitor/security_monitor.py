@@ -139,6 +139,9 @@ class SecurityMonitor:
             return
 
         previous_state = self._last_states.get(entity_id)
+        if previous_state is None:
+            previous_state = _security_state(event.data.get("old_state"))
+
         if previous_state == security_state:
             return
 

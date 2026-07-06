@@ -119,12 +119,36 @@ def _build_options_schema(defaults: dict[str, Any] | None) -> vol.Schema:
                 CONF_MONITORING_LABEL,
                 default=defaults.get(CONF_MONITORING_LABEL, DEFAULT_MONITORING_LABEL),
             ): selector.TextSelector(),
+            vol.Required(
+                CONF_OBJECT_LABELS,
+                default=defaults.get(CONF_OBJECT_LABELS, ""),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                )
+            ),
+            vol.Optional(
+                CONF_OBJECT_NAMES,
+                default=defaults.get(CONF_OBJECT_NAMES, ""),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                )
+            ),
             vol.Optional(
                 CONF_CATEGORY_LABELS,
                 default=defaults.get(
                     CONF_CATEGORY_LABELS,
                     "\n".join(DEFAULT_CATEGORY_LABELS),
                 ),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                )
+            ),
+            vol.Optional(
+                CONF_CATEGORY_NAMES,
+                default=defaults.get(CONF_CATEGORY_NAMES, ""),
             ): selector.TextSelector(
                 selector.TextSelectorConfig(
                     multiline=True,
@@ -152,30 +176,6 @@ def _build_options_schema(defaults: dict[str, Any] | None) -> vol.Schema:
                         NOTIFICATION_MODE_CATEGORY_ROUTING,
                     ],
                     mode=selector.SelectSelectorMode.DROPDOWN,
-                )
-            ),
-            vol.Required(
-                CONF_OBJECT_LABELS,
-                default=defaults.get(CONF_OBJECT_LABELS, ""),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    multiline=True,
-                )
-            ),
-            vol.Optional(
-                CONF_OBJECT_NAMES,
-                default=defaults.get(CONF_OBJECT_NAMES, ""),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    multiline=True,
-                )
-            ),
-            vol.Optional(
-                CONF_CATEGORY_NAMES,
-                default=defaults.get(CONF_CATEGORY_NAMES, ""),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    multiline=True,
                 )
             ),
             vol.Required(

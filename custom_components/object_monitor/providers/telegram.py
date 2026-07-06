@@ -62,7 +62,7 @@ class TelegramProvider(NotificationProvider):
             await self._hass.services.async_call(
                 SCRIPT_DOMAIN,
                 _script_service_name(script_entity_id),
-                {"message": _format_message(event)},
+                {"message": _format_message(event, self._config)},
                 blocking=True,
             )
         except HomeAssistantError as err:
@@ -98,51 +98,26 @@ def _script_service_name(script_entity_id: str) -> str:
     return script_entity_id.split(".", 1)[1]
 
 
-def _format_message(event: NotificationEvent) -> str:
+def _format_message(event: NotificationEvent, config: MonitorConfig) -> str:
     """Format an Object Monitor event as a Telegram message."""
-    category = event.category or "не вказано"
+    object_name = config.object_display_name(event.object_label)
+    category = (
+        config.category_display_name(event.category)
+        if event.category
+        else "не вказано"
+    )
 
     if event.event_type is NotificationEventType.OFFLINE:
         return (
-            f"\U0001f534 {event.friendly_name}\n\n"
-            "Сутність\n"
-            f"{event.entity_id}\n\n"
-            "Об'єкт\n"
-            f"{event.object_label}\n\n"
-            "Категорія\n"
-            f"{category}\n\n"
-            f"Недоступна понад {_format_duration(event.timeout_seconds)}."
+            f"\U0001f534 {event.friendly_name} недоступний\n\n"
+            f"Об'єкт: {object_name}\n"
+            f"Категорія: {category}\n"
+            f"Сутність: {event.entity_id}"
         )
 
     return (
-        f"\U0001f7e2 {event.friendly_name}\n\n"
-        "Відновлено.\n\n"
-        "Сутність\n"
-        f"{event.entity_id}\n\n"
-        "Об'єкт\n"
-        f"{event.object_label}\n\n"
-        "Категорія\n"
-        f"{category}"
+        f"\U0001f7e2 {event.friendly_name} відновлено\n\n"
+        f"Об'єкт: {object_name}\n"
+        f"Категорія: {category}\n"
+        f"Сутність: {event.entity_id}"
     )
-
-
-def _format_duration(seconds: int) -> str:
-    """Format a duration in Ukrainian."""
-    if seconds < 60:
-        return f"{seconds} {_plural(seconds, 'секунду', 'секунди', 'секунд')}"
-
-    minutes = round(seconds / 60)
-    return f"{minutes} {_plural(minutes, 'хвилину', 'хвилини', 'хвилин')}"
-
-
-def _plural(value: int, one: str, few: str, many: str) -> str:
-    """Return the Ukrainian plural form for a positive integer."""
-    last_two = value % 100
-    last = value % 10
-    if 11 <= last_two <= 14:
-        return many
-    if last == 1:
-        return one
-    if 2 <= last <= 4:
-        return few
-    return many

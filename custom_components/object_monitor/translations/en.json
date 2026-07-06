@@ -11,6 +11,8 @@
           "monitoring_timeout": "Monitoring timeout",
           "notification_mode": "Notification mode",
           "object_labels": "Object labels",
+          "object_names": "Object names",
+          "category_names": "Category names",
           "notification_provider": "Notification provider",
           "heartbeat_interval": "Heartbeat interval",
           "debug_logging": "Debug logging"
@@ -20,7 +22,9 @@
           "category_labels": "Labels treated as notification routing categories. Enter one label per line. Leave empty if categories are not needed.",
           "monitoring_timeout": "How long an entity must remain unavailable before an offline notification is sent. Hours, minutes, and seconds can be entered.",
           "notification_mode": "Single routing sends all object notifications to one script. Category routing sends notifications to category-specific scripts.",
-          "object_labels": "Labels that identify monitored objects. Enter one label per line, for example qirim or hotel_kyiv.",
+          "object_labels": "Labels that identify monitored objects. Enter one label per line, for example home, restaurant, or cafe.",
+          "object_names": "Human-friendly names for object labels in messages. Format: home=Home, one entry per line.",
+          "category_names": "Human-friendly names for category labels in messages. Format: power=Power, one entry per line.",
           "notification_provider": "Delivery provider for notifications.",
           "heartbeat_interval": "Reserved for future heartbeat support. Set 0 to disable.",
           "debug_logging": "Enable additional debug logging for this integration."
@@ -41,6 +45,10 @@
       "category_object_overlap": "The same label cannot be both a category label and an object label.",
       "object_labels_required": "At least one object label is required.",
       "invalid_object_label": "Object labels may contain only lowercase letters, numbers, and underscores.",
+      "invalid_label_name_mapping": "Names must use label=Name format, one entry per line.",
+      "invalid_label_name_label": "A label in the name dictionary may contain only lowercase letters, numbers, and underscores.",
+      "unknown_object_name_label": "Object names can only use labels from the Object labels field.",
+      "unknown_category_name_label": "Category names can only use labels from the Category labels field.",
       "reserved_object_label": "Object labels cannot match the monitoring label or category labels."
     },
     "abort": {
@@ -58,6 +66,8 @@
           "monitoring_timeout": "Monitoring timeout",
           "notification_mode": "Notification mode",
           "object_labels": "Object labels",
+          "object_names": "Object names",
+          "category_names": "Category names",
           "notification_provider": "Notification provider",
           "heartbeat_interval": "Heartbeat interval",
           "debug_logging": "Debug logging"
@@ -67,7 +77,9 @@
           "category_labels": "Labels treated as notification routing categories. Enter one label per line. Leave empty if categories are not needed.",
           "monitoring_timeout": "How long an entity must remain unavailable before an offline notification is sent. Hours, minutes, and seconds can be entered.",
           "notification_mode": "Single routing sends all object notifications to one script. Category routing sends notifications to category-specific scripts.",
-          "object_labels": "Labels that identify monitored objects. Enter one label per line, for example qirim or hotel_kyiv.",
+          "object_labels": "Labels that identify monitored objects. Enter one label per line, for example home, restaurant, or cafe.",
+          "object_names": "Human-friendly names for object labels in messages. Format: home=Home, one entry per line.",
+          "category_names": "Human-friendly names for category labels in messages. Format: power=Power, one entry per line.",
           "notification_provider": "Delivery provider for notifications.",
           "heartbeat_interval": "Reserved for future heartbeat support. Set 0 to disable.",
           "debug_logging": "Enable additional debug logging for this integration."
@@ -88,6 +100,10 @@
       "category_object_overlap": "The same label cannot be both a category label and an object label.",
       "object_labels_required": "At least one object label is required.",
       "invalid_object_label": "Object labels may contain only lowercase letters, numbers, and underscores.",
+      "invalid_label_name_mapping": "Names must use label=Name format, one entry per line.",
+      "invalid_label_name_label": "A label in the name dictionary may contain only lowercase letters, numbers, and underscores.",
+      "unknown_object_name_label": "Object names can only use labels from the Object labels field.",
+      "unknown_category_name_label": "Category names can only use labels from the Category labels field.",
       "reserved_object_label": "Object labels cannot match the monitoring label or category labels."
     }
   },

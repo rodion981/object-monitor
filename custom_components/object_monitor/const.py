@@ -27,6 +27,8 @@ DEFAULT_CATEGORY_LABELS: Final[tuple[str, ...]] = (
 
 CONF_MONITORING_LABEL: Final = "monitoring_label"
 CONF_CATEGORY_LABELS: Final = "category_labels"
+CONF_OBJECT_NAMES: Final = "object_names"
+CONF_CATEGORY_NAMES: Final = "category_names"
 CONF_MONITORING_TIMEOUT: Final = "monitoring_timeout"
 CONF_NOTIFICATION_MODE: Final = "notification_mode"
 CONF_OBJECT_LABELS: Final = "object_labels"

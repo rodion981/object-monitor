@@ -26,6 +26,18 @@ class TestStoredModels(unittest.TestCase):
         self.assertEqual(config.monitoring_label, "device_monitoring")
         self.assertEqual(config.category_labels, ("security", "light", "climate"))
 
+    def test_monitor_config_display_names_fall_back_to_labels(self) -> None:
+        """Configured display names override raw labels only for presentation."""
+        config = MonitorConfig(
+            object_names={"home": "Дім"},
+            category_names={"power": "Живлення"},
+        )
+
+        self.assertEqual(config.object_display_name("home"), "Дім")
+        self.assertEqual(config.object_display_name("restaurant"), "restaurant")
+        self.assertEqual(config.category_display_name("power"), "Живлення")
+        self.assertEqual(config.category_display_name("security"), "security")
+
     def test_stored_entity_round_trip(self) -> None:
         """Stored entity state survives JSON serialization."""
         unavailable_since = datetime(2026, 7, 6, 10, 0, tzinfo=timezone.utc)

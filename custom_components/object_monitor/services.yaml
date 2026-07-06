@@ -7,15 +7,11 @@ send_test_notification:
       selector:
         text: {}
       name: Object label
-      description: Configured object label, for example qirim or hotel_kyiv.
+      description: Configured object label, for example home, restaurant, or cafe.
     category:
       required: false
       selector:
-        select:
-          options:
-            - security
-            - light
-            - climate
+        text: {}
       name: Category
       description: Optional category used by category routing.
     event_type:

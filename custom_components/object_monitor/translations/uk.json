@@ -11,6 +11,8 @@
           "monitoring_timeout": "Таймаут моніторингу",
           "notification_mode": "Режим сповіщень",
           "object_labels": "Labels об'єктів",
+          "object_names": "Назви об'єктів",
+          "category_names": "Назви категорій",
           "notification_provider": "Провайдер сповіщень",
           "heartbeat_interval": "Інтервал heartbeat",
           "debug_logging": "Debug-логування"
@@ -20,7 +22,9 @@
           "category_labels": "Labels, які вважаються категоріями для маршрутизації. Введіть по одному label на рядок. Можна залишити порожнім, якщо категорії не потрібні.",
           "monitoring_timeout": "Скільки entity має залишатися unavailable перед offline-сповіщенням. Можна вказати години, хвилини та секунди.",
           "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
-          "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад qirim або hotel_kyiv.",
+          "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад home, restaurant або cafe.",
+          "object_names": "Людські назви для labels об'єктів у повідомленнях. Формат: home=Дім, по одному запису на рядок.",
+          "category_names": "Людські назви для labels категорій у повідомленнях. Формат: power=Живлення, по одному запису на рядок.",
           "notification_provider": "Провайдер доставки сповіщень.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
           "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
@@ -41,6 +45,10 @@
       "category_object_overlap": "Один і той самий label не може одночасно бути категорією та об'єктом.",
       "object_labels_required": "Потрібен хоча б один label об'єкта.",
       "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores.",
+      "invalid_label_name_mapping": "Назви потрібно вводити у форматі label=Назва, по одному запису на рядок.",
+      "invalid_label_name_label": "Label у словнику назв може містити тільки малі латинські літери, цифри та underscores.",
+      "unknown_object_name_label": "У назвах об'єктів можна використовувати тільки labels із поля Labels об'єктів.",
+      "unknown_category_name_label": "У назвах категорій можна використовувати тільки labels із поля Labels категорій.",
       "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій."
     },
     "abort": {
@@ -58,6 +66,8 @@
           "monitoring_timeout": "Таймаут моніторингу",
           "notification_mode": "Режим сповіщень",
           "object_labels": "Labels об'єктів",
+          "object_names": "Назви об'єктів",
+          "category_names": "Назви категорій",
           "notification_provider": "Провайдер сповіщень",
           "heartbeat_interval": "Інтервал heartbeat",
           "debug_logging": "Debug-логування"
@@ -67,7 +77,9 @@
           "category_labels": "Labels, які вважаються категоріями для маршрутизації. Введіть по одному label на рядок. Можна залишити порожнім, якщо категорії не потрібні.",
           "monitoring_timeout": "Скільки entity має залишатися unavailable перед offline-сповіщенням. Можна вказати години, хвилини та секунди.",
           "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
-          "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад qirim або hotel_kyiv.",
+          "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад home, restaurant або cafe.",
+          "object_names": "Людські назви для labels об'єктів у повідомленнях. Формат: home=Дім, по одному запису на рядок.",
+          "category_names": "Людські назви для labels категорій у повідомленнях. Формат: power=Живлення, по одному запису на рядок.",
           "notification_provider": "Провайдер доставки сповіщень.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
           "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
@@ -88,6 +100,10 @@
       "category_object_overlap": "Один і той самий label не може одночасно бути категорією та об'єктом.",
       "object_labels_required": "Потрібен хоча б один label об'єкта.",
       "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores.",
+      "invalid_label_name_mapping": "Назви потрібно вводити у форматі label=Назва, по одному запису на рядок.",
+      "invalid_label_name_label": "Label у словнику назв може містити тільки малі латинські літери, цифри та underscores.",
+      "unknown_object_name_label": "У назвах об'єктів можна використовувати тільки labels із поля Labels об'єктів.",
+      "unknown_category_name_label": "У назвах категорій можна використовувати тільки labels із поля Labels категорій.",
       "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій."
     }
   },

@@ -14,6 +14,7 @@ from homeassistant.helpers import selector
 
 from .const import (
     CONF_CATEGORY_LABELS,
+    CONF_CATEGORY_NAMES,
     CONF_DEBUG_LOGGING,
     CONF_HEARTBEAT_INTERVAL,
     CONF_MONITORING_LABEL,
@@ -21,6 +22,7 @@ from .const import (
     CONF_NOTIFICATION_MODE,
     CONF_NOTIFICATION_PROVIDER,
     CONF_OBJECT_LABELS,
+    CONF_OBJECT_NAMES,
     DEFAULT_CATEGORY_LABELS,
     DEFAULT_DEBUG_LOGGING,
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
@@ -160,6 +162,22 @@ def _build_options_schema(defaults: dict[str, Any] | None) -> vol.Schema:
                     multiline=True,
                 )
             ),
+            vol.Optional(
+                CONF_OBJECT_NAMES,
+                default=defaults.get(CONF_OBJECT_NAMES, ""),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                )
+            ),
+            vol.Optional(
+                CONF_CATEGORY_NAMES,
+                default=defaults.get(CONF_CATEGORY_NAMES, ""),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                )
+            ),
             vol.Required(
                 CONF_NOTIFICATION_PROVIDER,
                 default=defaults.get(
@@ -252,12 +270,30 @@ def _validate_user_input(
     elif set(object_labels) & set(category_labels):
         errors[CONF_OBJECT_LABELS] = "category_object_overlap"
 
+    object_names, object_name_error = _normalize_label_names(
+        user_input.get(CONF_OBJECT_NAMES)
+    )
+    if object_name_error:
+        errors[CONF_OBJECT_NAMES] = object_name_error
+    elif set(object_names) - set(object_labels):
+        errors[CONF_OBJECT_NAMES] = "unknown_object_name_label"
+
+    category_names, category_name_error = _normalize_label_names(
+        user_input.get(CONF_CATEGORY_NAMES)
+    )
+    if category_name_error:
+        errors[CONF_CATEGORY_NAMES] = category_name_error
+    elif set(category_names) - set(category_labels):
+        errors[CONF_CATEGORY_NAMES] = "unknown_category_name_label"
+
     options = {
         CONF_MONITORING_LABEL: monitoring_label or DEFAULT_MONITORING_LABEL,
         CONF_CATEGORY_LABELS: list(category_labels),
         CONF_MONITORING_TIMEOUT: timeout_seconds or DEFAULT_TIMEOUT_SECONDS,
         CONF_NOTIFICATION_MODE: notification_mode,
         CONF_OBJECT_LABELS: list(object_labels),
+        CONF_OBJECT_NAMES: object_names,
+        CONF_CATEGORY_NAMES: category_names,
         CONF_NOTIFICATION_PROVIDER: notification_provider,
         CONF_HEARTBEAT_INTERVAL: heartbeat_interval
         if heartbeat_interval is not None
@@ -291,6 +327,10 @@ def _options_for_form(options: Mapping[str, Any]) -> dict[str, Any]:
             DEFAULT_NOTIFICATION_MODE,
         ),
         CONF_OBJECT_LABELS: "\n".join(options.get(CONF_OBJECT_LABELS, [])),
+        CONF_OBJECT_NAMES: _label_names_for_form(options.get(CONF_OBJECT_NAMES, {})),
+        CONF_CATEGORY_NAMES: _label_names_for_form(
+            options.get(CONF_CATEGORY_NAMES, {})
+        ),
         CONF_NOTIFICATION_PROVIDER: options.get(
             CONF_NOTIFICATION_PROVIDER,
             DEFAULT_NOTIFICATION_PROVIDER,
@@ -333,6 +373,45 @@ def _normalize_labels(value: Any) -> tuple[str, ...]:
         seen.add(label)
 
     return tuple(labels)
+
+
+def _normalize_label_names(value: Any) -> tuple[dict[str, str], str | None]:
+    """Normalize label display name input from key=value lines."""
+    if value is None:
+        return {}, None
+
+    if isinstance(value, Mapping):
+        raw_items = value.items()
+    else:
+        raw_items = []
+        for line in str(value).splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            separator = "=" if "=" in line else ":" if ":" in line else None
+            if separator is None:
+                return {}, "invalid_label_name_mapping"
+            key, display_name = line.split(separator, 1)
+            raw_items.append((key, display_name))
+
+    names: dict[str, str] = {}
+    for raw_key, raw_display_name in raw_items:
+        key = str(raw_key).strip().lower()
+        display_name = str(raw_display_name).strip()
+        if not key or not display_name:
+            return {}, "invalid_label_name_mapping"
+        if not LABEL_PATTERN.fullmatch(key):
+            return {}, "invalid_label_name_label"
+        names[key] = display_name
+
+    return names, None
+
+
+def _label_names_for_form(value: Any) -> str:
+    """Format stored label display names for multiline form defaults."""
+    if not isinstance(value, Mapping):
+        return ""
+    return "\n".join(f"{key}={name}" for key, name in value.items())
 
 
 def _coerce_int(value: Any) -> int | None:

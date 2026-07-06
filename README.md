@@ -1,12 +1,13 @@
 # Object Monitor
 
-Object Monitor is a Home Assistant custom integration for monitoring unavailable entities across multiple customer objects.
+Object Monitor is a Home Assistant custom integration for monitoring unavailable entities across multiple locations, sites, or customer objects and sending routed Telegram notifications.
 
 The integration is event-driven and uses Home Assistant labels. Label roles are configurable in the integration options:
 
 - Monitoring label selects entities for monitoring. Default: `device_monitoring`.
-- Configured object labels, such as `qirim` or `hotel_kyiv`, identify the monitored object.
+- Configured object labels, such as `home`, `restaurant`, or `cafe`, identify the monitored object.
 - Optional category labels can route notifications to Telegram topics. Defaults: `security`, `light`, `climate`.
+- Optional display names let notifications show human-friendly object and category names while labels and scripts remain stable Latin IDs.
 
 ## Installation with HACS
 
@@ -39,24 +40,40 @@ Configure label roles:
 - Object labels, for example:
 
 ```text
-qirim
-karavan
-hotel_kyiv
+home
+restaurant
+cafe
+```
+
+Optionally configure display names for Telegram messages:
+
+```text
+home=Home
+restaurant=Restaurant
+cafe=Cafe
+```
+
+And category display names:
+
+```text
+security=Security
+power=Power
+internet=Internet
 ```
 
 For single Telegram routing, create scripts like:
 
 ```text
-script.tg_qirim
-script.tg_karavan
+script.tg_home
+script.tg_restaurant
 ```
 
 For category routing, create scripts like:
 
 ```text
-script.tg_qirim_security
-script.tg_qirim_light
-script.tg_qirim_climate
+script.tg_home_security
+script.tg_home_power
+script.tg_home_internet
 ```
 
 Then assign labels to monitored entities.
@@ -65,14 +82,14 @@ Single routing example:
 
 ```text
 device_monitoring
-qirim
+home
 ```
 
 Category routing example:
 
 ```text
 device_monitoring
-qirim
+home
 security
 ```
 

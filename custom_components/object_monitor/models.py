@@ -57,6 +57,8 @@ class MonitorConfig:
     monitoring_timeout: int = DEFAULT_TIMEOUT_SECONDS
     notification_mode: NotificationMode = NotificationMode(DEFAULT_NOTIFICATION_MODE)
     object_labels: tuple[str, ...] = ()
+    object_names: dict[str, str] = field(default_factory=dict)
+    category_names: dict[str, str] = field(default_factory=dict)
     debug_logging: bool = DEFAULT_DEBUG_LOGGING
     notification_provider: ProviderType = ProviderType(DEFAULT_NOTIFICATION_PROVIDER)
     heartbeat_interval: int = DEFAULT_HEARTBEAT_INTERVAL_SECONDS
@@ -70,6 +72,14 @@ class MonitorConfig:
     def category_label_set(self) -> frozenset[str]:
         """Return configured category labels as a set for fast lookups."""
         return frozenset(self.category_labels)
+
+    def object_display_name(self, label: str) -> str:
+        """Return a display name for an object label."""
+        return self.object_names.get(label, label)
+
+    def category_display_name(self, label: str) -> str:
+        """Return a display name for a category label."""
+        return self.category_names.get(label, label)
 
 
 @dataclass(slots=True, frozen=True)

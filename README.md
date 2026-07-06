@@ -1,13 +1,13 @@
 # Object Monitor
 
-Object Monitor is a Home Assistant custom integration for monitoring unavailable entities across multiple locations, sites, or customer objects and sending routed Telegram notifications.
+Object Monitor is a Home Assistant custom integration for monitoring unavailable entities across multiple locations, sites, or customer objects and emitting Home Assistant events for automations.
 
 The integration is event-driven and uses Home Assistant labels. Label roles are configurable in the integration options:
 
 - Monitoring label selects entities for monitoring. Default: `device_monitoring`.
 - Configured object labels, such as `home`, `restaurant`, or `cafe`, identify the monitored object.
-- Optional category labels can route notifications to Telegram topics. Defaults: `security`, `light`, `climate`.
-- Optional display names let notifications show human-friendly object and category names while labels and scripts remain stable Latin IDs.
+- Optional category labels can route automation logic. Defaults: `security`, `light`, `climate`.
+- Optional display names let events show human-friendly object and category names while labels remain stable Latin IDs.
 - Security systems can be monitored with the `security_system` label.
 
 ## Installation with HACS
@@ -46,7 +46,7 @@ restaurant
 cafe
 ```
 
-Optionally configure display names for Telegram messages:
+Optionally configure display names for emitted events:
 
 ```text
 home=Home
@@ -62,31 +62,28 @@ power=Power
 internet=Internet
 ```
 
-For single Telegram routing, create scripts like:
+Object Monitor does not call notification scripts directly. It emits the
+`object_monitor_event` event and your Home Assistant automations decide how to
+deliver notifications.
 
-```text
-script.tg_home
-script.tg_restaurant
-```
+Automation trigger:
 
-For category routing, create scripts like:
-
-```text
-script.tg_home_security
-script.tg_home_power
-script.tg_home_internet
+```yaml
+trigger:
+  - platform: event
+    event_type: object_monitor_event
 ```
 
 Then assign labels to monitored entities.
 
-Single routing example:
+Object-only event example:
 
 ```text
 device_monitoring
 home
 ```
 
-Category routing example:
+Categorized event example:
 
 ```text
 device_monitoring
@@ -115,12 +112,8 @@ home
 
 `home` must be one of the configured object labels.
 
-Security state notifications use the same Telegram routing as availability notifications:
-
-```text
-script.tg_home
-script.tg_home_security
-```
+Security state changes emit the same `object_monitor_event` event as
+availability monitoring, with `event_type: security_state`.
 
 Supported states include `disarmed`, `armed_home`, `armed_away`, `armed_night`, `armed_vacation`, `arming`, `pending`, `triggered`, `unknown`, and `unavailable`.
 
@@ -134,4 +127,5 @@ The integration provides:
 - `object_monitor.reload_monitored_entities`
 - `object_monitor.clear_entity_state`
 
-Use `object_monitor.send_test_notification` from Developer Tools to verify Telegram routing before testing real unavailable entities.
+Use `object_monitor.send_test_notification` from Developer Tools to emit a test
+`object_monitor_event` before testing real unavailable entities.

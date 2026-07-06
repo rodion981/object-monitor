@@ -2,6 +2,5 @@
   "name": "Object Monitor",
   "render_readme": true,
   "homeassistant": "2024.6.0",
-  "domains": ["script"],
   "iot_class": "Local Push"
 }

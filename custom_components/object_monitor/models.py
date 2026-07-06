@@ -12,24 +12,9 @@ from .const import (
     DEFAULT_CATEGORY_LABELS,
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
     DEFAULT_MONITORING_LABEL,
-    DEFAULT_NOTIFICATION_MODE,
-    DEFAULT_NOTIFICATION_PROVIDER,
     DEFAULT_TIMEOUT_SECONDS,
     EVENT_TYPE_SECURITY_STATE,
 )
-
-
-class NotificationMode(StrEnum):
-    """Supported notification routing modes."""
-
-    CATEGORY_ROUTING = "category_routing"
-    SINGLE_ROUTING = "single_routing"
-
-
-class ProviderType(StrEnum):
-    """Supported notification provider types."""
-
-    TELEGRAM = "telegram"
 
 
 class NotificationEventType(StrEnum):
@@ -72,12 +57,10 @@ class MonitorConfig:
     monitoring_label: str = DEFAULT_MONITORING_LABEL
     category_labels: tuple[str, ...] = DEFAULT_CATEGORY_LABELS
     monitoring_timeout: int = DEFAULT_TIMEOUT_SECONDS
-    notification_mode: NotificationMode = NotificationMode(DEFAULT_NOTIFICATION_MODE)
     object_labels: tuple[str, ...] = ()
     object_names: dict[str, str] = field(default_factory=dict)
     category_names: dict[str, str] = field(default_factory=dict)
     debug_logging: bool = DEFAULT_DEBUG_LOGGING
-    notification_provider: ProviderType = ProviderType(DEFAULT_NOTIFICATION_PROVIDER)
     heartbeat_interval: int = DEFAULT_HEARTBEAT_INTERVAL_SECONDS
 
     @property

@@ -4,28 +4,24 @@
     "step": {
       "user": {
         "title": "Налаштування Object Monitor",
-        "description": "Вкажіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії повідомлень.",
+        "description": "Вкажіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охоронних подій додайте на alarm_control_panel labels security_system і один label об'єкта. Інтеграція генерує HA event object_monitor_event для ваших automations.",
         "data": {
           "monitoring_label": "Label, який вмикає моніторинг",
           "monitoring_timeout": "Таймаут за замовчуванням",
-          "notification_mode": "Режим сповіщень",
           "object_labels": "Labels об'єктів",
-          "object_names": "Назви об'єктів у повідомленнях",
+          "object_names": "Назви об'єктів у подіях",
           "category_labels": "Labels категорій",
-          "category_names": "Назви категорій у повідомленнях",
-          "notification_provider": "Провайдер сповіщень",
+          "category_names": "Назви категорій у подіях",
           "heartbeat_interval": "Інтервал heartbeat",
           "debug_logging": "Debug-логування"
         },
         "data_description": {
           "monitoring_label": "Цей label треба додати на кожну entity, яку Object Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
           "object_labels": "Список labels, які означають об'єкт або місце. Entity має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
-          "object_names": "Як показувати об'єкти в Telegram. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
-          "category_labels": "Список labels, які означають тип проблеми або гілку Telegram. Пишіть по одному на рядок: power, security, internet. Якщо категорії не потрібні, можна залишити порожнім.",
-          "category_names": "Як показувати категорії в Telegram. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
+          "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
+          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Якщо категорії не потрібні, можна залишити порожнім.",
+          "category_names": "Як показувати категорії в подіях. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
           "monitoring_timeout": "Базовий таймаут для всіх entity. Для конкретної entity можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
-          "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
-          "notification_provider": "Провайдер доставки сповіщень.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
           "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
         }
@@ -35,8 +31,6 @@
       "invalid_timeout": "Таймаут має бути додатною тривалістю.",
       "timeout_too_large": "Таймаут завеликий.",
       "invalid_heartbeat_interval": "Інтервал heartbeat має бути 0 або додатним числом.",
-      "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
-      "invalid_notification_provider": "Непідтримуваний провайдер сповіщень.",
       "monitoring_label_required": "Потрібен label для моніторингу.",
       "invalid_monitoring_label": "Label для моніторингу може містити тільки малі латинські літери, цифри та underscores.",
       "invalid_category_label": "Labels категорій можуть містити тільки малі латинські літери, цифри та underscores.",
@@ -59,28 +53,24 @@
     "step": {
       "init": {
         "title": "Опції Object Monitor",
-        "description": "Оновіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії повідомлень.",
+        "description": "Оновіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охоронних подій додайте на alarm_control_panel labels security_system і один label об'єкта. Інтеграція генерує HA event object_monitor_event для ваших automations.",
         "data": {
           "monitoring_label": "Label, який вмикає моніторинг",
           "monitoring_timeout": "Таймаут за замовчуванням",
-          "notification_mode": "Режим сповіщень",
           "object_labels": "Labels об'єктів",
-          "object_names": "Назви об'єктів у повідомленнях",
+          "object_names": "Назви об'єктів у подіях",
           "category_labels": "Labels категорій",
-          "category_names": "Назви категорій у повідомленнях",
-          "notification_provider": "Провайдер сповіщень",
+          "category_names": "Назви категорій у подіях",
           "heartbeat_interval": "Інтервал heartbeat",
           "debug_logging": "Debug-логування"
         },
         "data_description": {
           "monitoring_label": "Цей label треба додати на кожну entity, яку Object Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
           "object_labels": "Список labels, які означають об'єкт або місце. Entity має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
-          "object_names": "Як показувати об'єкти в Telegram. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
-          "category_labels": "Список labels, які означають тип проблеми або гілку Telegram. Пишіть по одному на рядок: power, security, internet. Якщо категорії не потрібні, можна залишити порожнім.",
-          "category_names": "Як показувати категорії в Telegram. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
+          "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
+          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Якщо категорії не потрібні, можна залишити порожнім.",
+          "category_names": "Як показувати категорії в подіях. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
           "monitoring_timeout": "Базовий таймаут для всіх entity. Для конкретної entity можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
-          "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
-          "notification_provider": "Провайдер доставки сповіщень.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
           "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
         }
@@ -90,8 +80,6 @@
       "invalid_timeout": "Таймаут має бути додатною тривалістю.",
       "timeout_too_large": "Таймаут завеликий.",
       "invalid_heartbeat_interval": "Інтервал heartbeat має бути 0 або додатним числом.",
-      "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
-      "invalid_notification_provider": "Непідтримуваний провайдер сповіщень.",
       "monitoring_label_required": "Потрібен label для моніторингу.",
       "invalid_monitoring_label": "Label для моніторингу може містити тільки малі латинські літери, цифри та underscores.",
       "invalid_category_label": "Labels категорій можуть містити тільки малі латинські літери, цифри та underscores.",
@@ -107,19 +95,7 @@
       "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій."
     }
   },
-  "selector": {
-    "notification_mode": {
-      "options": {
-        "single_routing": "Один маршрут",
-        "category_routing": "Маршрутизація за категоріями"
-      }
-    },
-    "notification_provider": {
-      "options": {
-        "telegram": "Telegram"
-      }
-    }
-  },
+  "selector": {},
   "exceptions": {
     "unknown_object_label": {
       "message": "Невідомий label об'єкта: {object_label}."

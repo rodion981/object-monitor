@@ -19,8 +19,6 @@ from .const import (
     CONF_HEARTBEAT_INTERVAL,
     CONF_MONITORING_LABEL,
     CONF_MONITORING_TIMEOUT,
-    CONF_NOTIFICATION_MODE,
-    CONF_NOTIFICATION_PROVIDER,
     CONF_OBJECT_LABELS,
     CONF_OBJECT_NAMES,
     DEFAULT_CATEGORY_LABELS,
@@ -28,13 +26,8 @@ from .const import (
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
     DEFAULT_MONITORING_LABEL,
     DEFAULT_NAME,
-    DEFAULT_NOTIFICATION_MODE,
-    DEFAULT_NOTIFICATION_PROVIDER,
     DEFAULT_TIMEOUT_SECONDS,
     DOMAIN,
-    NOTIFICATION_MODE_CATEGORY_ROUTING,
-    NOTIFICATION_MODE_SINGLE_ROUTING,
-    PROVIDER_TELEGRAM,
 )
 
 MIN_TIMEOUT_SECONDS = 1
@@ -163,33 +156,6 @@ def _build_options_schema(defaults: dict[str, Any] | None) -> vol.Schema:
             ): selector.DurationSelector(
                 selector.DurationSelectorConfig(enable_day=False)
             ),
-            vol.Required(
-                CONF_NOTIFICATION_MODE,
-                default=defaults.get(
-                    CONF_NOTIFICATION_MODE,
-                    DEFAULT_NOTIFICATION_MODE,
-                ),
-            ): selector.SelectSelector(
-                selector.SelectSelectorConfig(
-                    options=[
-                        NOTIFICATION_MODE_SINGLE_ROUTING,
-                        NOTIFICATION_MODE_CATEGORY_ROUTING,
-                    ],
-                    mode=selector.SelectSelectorMode.DROPDOWN,
-                )
-            ),
-            vol.Required(
-                CONF_NOTIFICATION_PROVIDER,
-                default=defaults.get(
-                    CONF_NOTIFICATION_PROVIDER,
-                    DEFAULT_NOTIFICATION_PROVIDER,
-                ),
-            ): selector.SelectSelector(
-                selector.SelectSelectorConfig(
-                    options=[PROVIDER_TELEGRAM],
-                    mode=selector.SelectSelectorMode.DROPDOWN,
-                )
-            ),
             vol.Optional(
                 CONF_HEARTBEAT_INTERVAL,
                 default=defaults.get(
@@ -228,23 +194,6 @@ def _validate_user_input(
     heartbeat_interval = _coerce_int(user_input.get(CONF_HEARTBEAT_INTERVAL, 0))
     if heartbeat_interval is None or heartbeat_interval < 0:
         errors[CONF_HEARTBEAT_INTERVAL] = "invalid_heartbeat_interval"
-
-    notification_mode = user_input.get(
-        CONF_NOTIFICATION_MODE,
-        DEFAULT_NOTIFICATION_MODE,
-    )
-    if notification_mode not in {
-        NOTIFICATION_MODE_CATEGORY_ROUTING,
-        NOTIFICATION_MODE_SINGLE_ROUTING,
-    }:
-        errors[CONF_NOTIFICATION_MODE] = "invalid_notification_mode"
-
-    notification_provider = user_input.get(
-        CONF_NOTIFICATION_PROVIDER,
-        DEFAULT_NOTIFICATION_PROVIDER,
-    )
-    if notification_provider != PROVIDER_TELEGRAM:
-        errors[CONF_NOTIFICATION_PROVIDER] = "invalid_notification_provider"
 
     monitoring_label = _normalize_single_label(
         user_input.get(CONF_MONITORING_LABEL, DEFAULT_MONITORING_LABEL)
@@ -290,11 +239,9 @@ def _validate_user_input(
         CONF_MONITORING_LABEL: monitoring_label or DEFAULT_MONITORING_LABEL,
         CONF_CATEGORY_LABELS: list(category_labels),
         CONF_MONITORING_TIMEOUT: timeout_seconds or DEFAULT_TIMEOUT_SECONDS,
-        CONF_NOTIFICATION_MODE: notification_mode,
         CONF_OBJECT_LABELS: list(object_labels),
         CONF_OBJECT_NAMES: object_names,
         CONF_CATEGORY_NAMES: category_names,
-        CONF_NOTIFICATION_PROVIDER: notification_provider,
         CONF_HEARTBEAT_INTERVAL: heartbeat_interval
         if heartbeat_interval is not None
         else DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
@@ -322,18 +269,10 @@ def _options_for_form(options: Mapping[str, Any]) -> dict[str, Any]:
                 DEFAULT_TIMEOUT_SECONDS,
             )
         ),
-        CONF_NOTIFICATION_MODE: options.get(
-            CONF_NOTIFICATION_MODE,
-            DEFAULT_NOTIFICATION_MODE,
-        ),
         CONF_OBJECT_LABELS: "\n".join(options.get(CONF_OBJECT_LABELS, [])),
         CONF_OBJECT_NAMES: _label_names_for_form(options.get(CONF_OBJECT_NAMES, {})),
         CONF_CATEGORY_NAMES: _label_names_for_form(
             options.get(CONF_CATEGORY_NAMES, {})
-        ),
-        CONF_NOTIFICATION_PROVIDER: options.get(
-            CONF_NOTIFICATION_PROVIDER,
-            DEFAULT_NOTIFICATION_PROVIDER,
         ),
         CONF_HEARTBEAT_INTERVAL: options.get(
             CONF_HEARTBEAT_INTERVAL,

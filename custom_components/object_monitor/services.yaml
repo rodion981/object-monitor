@@ -1,6 +1,6 @@
 send_test_notification:
-  name: Send test notification
-  description: Send a test Object Monitor notification through the configured provider.
+  name: Emit test event
+  description: Emit a test object_monitor_event for automation testing.
   fields:
     object_label:
       required: true
@@ -13,7 +13,7 @@ send_test_notification:
       selector:
         text: {}
       name: Category
-      description: Optional category used by category routing.
+      description: Optional event category.
     event_type:
       required: false
       default: offline
@@ -23,21 +23,21 @@ send_test_notification:
             - offline
             - recovery
       name: Event type
-      description: Type of test notification to send.
+      description: Type of test event to emit.
     entity_id:
       required: false
       default: sensor.object_monitor_test
       selector:
         text: {}
       name: Entity ID
-      description: Entity ID shown in the test notification.
+      description: Entity ID included in the test event.
     friendly_name:
       required: false
       default: Тест Object Monitor
       selector:
         text: {}
       name: Friendly name
-      description: Friendly name shown in the test notification.
+      description: Friendly name included in the test event.
 
 reload_monitored_entities:
   name: Reload monitored entities

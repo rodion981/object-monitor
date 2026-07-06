@@ -31,25 +31,9 @@ CONF_CATEGORY_LABELS: Final = "category_labels"
 CONF_OBJECT_NAMES: Final = "object_names"
 CONF_CATEGORY_NAMES: Final = "category_names"
 CONF_MONITORING_TIMEOUT: Final = "monitoring_timeout"
-CONF_NOTIFICATION_MODE: Final = "notification_mode"
 CONF_OBJECT_LABELS: Final = "object_labels"
 CONF_DEBUG_LOGGING: Final = "debug_logging"
-CONF_NOTIFICATION_PROVIDER: Final = "notification_provider"
 CONF_HEARTBEAT_INTERVAL: Final = "heartbeat_interval"
-
-NOTIFICATION_MODE_CATEGORY_ROUTING: Final = "category_routing"
-NOTIFICATION_MODE_SINGLE_ROUTING: Final = "single_routing"
-NOTIFICATION_MODES: Final[frozenset[str]] = frozenset(
-    {
-        NOTIFICATION_MODE_CATEGORY_ROUTING,
-        NOTIFICATION_MODE_SINGLE_ROUTING,
-    }
-)
-DEFAULT_NOTIFICATION_MODE: Final = NOTIFICATION_MODE_SINGLE_ROUTING
-
-PROVIDER_TELEGRAM: Final = "telegram"
-NOTIFICATION_PROVIDERS: Final[frozenset[str]] = frozenset({PROVIDER_TELEGRAM})
-DEFAULT_NOTIFICATION_PROVIDER: Final = PROVIDER_TELEGRAM
 
 EVENT_OBJECT_MONITOR: Final = f"{DOMAIN}_event"
 EVENT_ENTITY_REGISTRY_UPDATED: Final = "entity_registry_updated"
@@ -65,9 +49,6 @@ STATE_UNKNOWN: Final = "unknown"
 STORAGE_KEY: Final = DOMAIN
 STORAGE_VERSION: Final = 1
 STORAGE_MINOR_VERSION: Final = 1
-
-SCRIPT_DOMAIN: Final = "script"
-TELEGRAM_SCRIPT_PREFIX: Final = "tg"
 
 ATTR_EVENT_TYPE: Final = "event_type"
 ATTR_ENTITY_ID: Final = "entity_id"

@@ -4,28 +4,24 @@
     "step": {
       "user": {
         "title": "Set up Object Monitor",
-        "description": "Choose which Home Assistant labels control monitoring, objects, and notification categories.",
+        "description": "Choose which Home Assistant labels control monitoring, objects, and event categories. For security events, add security_system and one object label to an alarm_control_panel. The integration emits the object_monitor_event HA event for your automations.",
         "data": {
           "monitoring_label": "Label that enables monitoring",
           "monitoring_timeout": "Default timeout",
-          "notification_mode": "Notification mode",
           "object_labels": "Object labels",
-          "object_names": "Object names in messages",
+          "object_names": "Object names in events",
           "category_labels": "Category labels",
-          "category_names": "Category names in messages",
-          "notification_provider": "Notification provider",
+          "category_names": "Category names in events",
           "heartbeat_interval": "Heartbeat interval",
           "debug_logging": "Debug logging"
         },
         "data_description": {
           "monitoring_label": "Add this label to every entity that Object Monitor should watch. Usually keep device_monitoring.",
           "object_labels": "Labels that mean an object or location. Each monitored entity must have exactly one of these labels. One per line: home, restaurant, cafe.",
-          "object_names": "How object labels should appear in Telegram. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
-          "category_labels": "Labels that mean a problem type or Telegram topic. One per line: power, security, internet. Leave empty if categories are not needed.",
-          "category_names": "How category labels should appear in Telegram. The left side must match Category labels. One per line: power=Power, security=Security.",
+          "object_names": "How object labels should appear in events. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
+          "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. Leave empty if categories are not needed.",
+          "category_names": "How category labels should appear in events. The left side must match Category labels. One per line: power=Power, security=Security.",
           "monitoring_timeout": "Fallback timeout used when an entity has no label such as timeout_20s, timeout_7m, or timeout_1h.",
-          "notification_mode": "Single routing sends all object notifications to one script. Category routing sends notifications to category-specific scripts.",
-          "notification_provider": "Delivery provider for notifications.",
           "heartbeat_interval": "Reserved for future heartbeat support. Set 0 to disable.",
           "debug_logging": "Enable additional debug logging for this integration."
         }
@@ -35,8 +31,6 @@
       "invalid_timeout": "Timeout must be a positive duration.",
       "timeout_too_large": "Timeout is too large.",
       "invalid_heartbeat_interval": "Heartbeat interval must be 0 or a positive number.",
-      "invalid_notification_mode": "Unsupported notification mode.",
-      "invalid_notification_provider": "Unsupported notification provider.",
       "monitoring_label_required": "A monitoring label is required.",
       "invalid_monitoring_label": "The monitoring label may contain only lowercase letters, numbers, and underscores.",
       "invalid_category_label": "Category labels may contain only lowercase letters, numbers, and underscores.",
@@ -59,28 +53,24 @@
     "step": {
       "init": {
         "title": "Object Monitor options",
-        "description": "Update which Home Assistant labels control monitoring, objects, and notification categories.",
+        "description": "Update which Home Assistant labels control monitoring, objects, and event categories. For security events, add security_system and one object label to an alarm_control_panel. The integration emits the object_monitor_event HA event for your automations.",
         "data": {
           "monitoring_label": "Label that enables monitoring",
           "monitoring_timeout": "Default timeout",
-          "notification_mode": "Notification mode",
           "object_labels": "Object labels",
-          "object_names": "Object names in messages",
+          "object_names": "Object names in events",
           "category_labels": "Category labels",
-          "category_names": "Category names in messages",
-          "notification_provider": "Notification provider",
+          "category_names": "Category names in events",
           "heartbeat_interval": "Heartbeat interval",
           "debug_logging": "Debug logging"
         },
         "data_description": {
           "monitoring_label": "Add this label to every entity that Object Monitor should watch. Usually keep device_monitoring.",
           "object_labels": "Labels that mean an object or location. Each monitored entity must have exactly one of these labels. One per line: home, restaurant, cafe.",
-          "object_names": "How object labels should appear in Telegram. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
-          "category_labels": "Labels that mean a problem type or Telegram topic. One per line: power, security, internet. Leave empty if categories are not needed.",
-          "category_names": "How category labels should appear in Telegram. The left side must match Category labels. One per line: power=Power, security=Security.",
+          "object_names": "How object labels should appear in events. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
+          "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. Leave empty if categories are not needed.",
+          "category_names": "How category labels should appear in events. The left side must match Category labels. One per line: power=Power, security=Security.",
           "monitoring_timeout": "Fallback timeout used when an entity has no label such as timeout_20s, timeout_7m, or timeout_1h.",
-          "notification_mode": "Single routing sends all object notifications to one script. Category routing sends notifications to category-specific scripts.",
-          "notification_provider": "Delivery provider for notifications.",
           "heartbeat_interval": "Reserved for future heartbeat support. Set 0 to disable.",
           "debug_logging": "Enable additional debug logging for this integration."
         }
@@ -90,8 +80,6 @@
       "invalid_timeout": "Timeout must be a positive duration.",
       "timeout_too_large": "Timeout is too large.",
       "invalid_heartbeat_interval": "Heartbeat interval must be 0 or a positive number.",
-      "invalid_notification_mode": "Unsupported notification mode.",
-      "invalid_notification_provider": "Unsupported notification provider.",
       "monitoring_label_required": "A monitoring label is required.",
       "invalid_monitoring_label": "The monitoring label may contain only lowercase letters, numbers, and underscores.",
       "invalid_category_label": "Category labels may contain only lowercase letters, numbers, and underscores.",
@@ -107,19 +95,7 @@
       "reserved_object_label": "Object labels cannot match the monitoring label or category labels."
     }
   },
-  "selector": {
-    "notification_mode": {
-      "options": {
-        "single_routing": "Single routing",
-        "category_routing": "Category routing"
-      }
-    },
-    "notification_provider": {
-      "options": {
-        "telegram": "Telegram"
-      }
-    }
-  },
+  "selector": {},
   "exceptions": {
     "unknown_object_label": {
       "message": "Unknown object label: {object_label}."

@@ -17,17 +17,14 @@ from .const import (
     CONF_HEARTBEAT_INTERVAL,
     CONF_MONITORING_LABEL,
     CONF_MONITORING_TIMEOUT,
-    CONF_NOTIFICATION_MODE,
-    CONF_NOTIFICATION_PROVIDER,
     CONF_OBJECT_LABELS,
     CONF_OBJECT_NAMES,
     DEFAULT_CATEGORY_LABELS,
     DEFAULT_DEBUG_LOGGING,
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
     DEFAULT_MONITORING_LABEL,
-    DEFAULT_NOTIFICATION_MODE,
-    DEFAULT_NOTIFICATION_PROVIDER,
     DEFAULT_TIMEOUT_SECONDS,
+    EVENT_OBJECT_MONITOR,
 )
 from .entity_tracker import EntityTracker
 from .label_resolver import LabelResolver
@@ -35,9 +32,7 @@ from .models import (
     MonitorConfig,
     NotificationEvent,
     NotificationEventType,
-    NotificationMode,
     NotificationResult,
-    ProviderType,
 )
 from .monitor import ObjectMonitor
 from .notification_manager import NotificationManager
@@ -148,6 +143,7 @@ class ObjectMonitorRuntime:
             notified_at=datetime.now(timezone.utc),
             timeout_seconds=self.config.monitoring_timeout,
         )
+        self.hass.bus.async_fire(EVENT_OBJECT_MONITOR, event.as_event_data())
         return await self.notification_manager.async_notify(event)
 
     def diagnostics(self) -> dict[str, Any]:
@@ -158,8 +154,6 @@ class ObjectMonitorRuntime:
             "monitoring_label": self.config.monitoring_label,
             "category_labels": list(self.config.category_labels),
             "monitoring_timeout": self.config.monitoring_timeout,
-            "notification_mode": self.config.notification_mode.value,
-            "notification_provider": self.config.notification_provider.value,
             "object_labels": list(self.config.object_labels),
             "object_names": dict(self.config.object_names),
             "debug_logging": self.config.debug_logging,
@@ -190,16 +184,10 @@ def build_monitor_config(options: Mapping[str, Any]) -> MonitorConfig:
         monitoring_timeout=int(
             options.get(CONF_MONITORING_TIMEOUT, DEFAULT_TIMEOUT_SECONDS)
         ),
-        notification_mode=NotificationMode(
-            options.get(CONF_NOTIFICATION_MODE, DEFAULT_NOTIFICATION_MODE)
-        ),
         object_labels=tuple(options.get(CONF_OBJECT_LABELS, ())),
         object_names=dict(options.get(CONF_OBJECT_NAMES, {})),
         category_names=dict(options.get(CONF_CATEGORY_NAMES, {})),
         debug_logging=bool(options.get(CONF_DEBUG_LOGGING, DEFAULT_DEBUG_LOGGING)),
-        notification_provider=ProviderType(
-            options.get(CONF_NOTIFICATION_PROVIDER, DEFAULT_NOTIFICATION_PROVIDER)
-        ),
         heartbeat_interval=int(
             options.get(CONF_HEARTBEAT_INTERVAL, DEFAULT_HEARTBEAT_INTERVAL_SECONDS)
         ),

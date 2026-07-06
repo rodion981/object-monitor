@@ -6,7 +6,7 @@ from collections.abc import Callable, Iterable
 from datetime import datetime, timezone
 import logging
 
-from homeassistant.core import CALLBACK_TYPE, HomeAssistant
+from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
 from homeassistant.helpers.event import async_call_later
 
 from .models import (
@@ -172,9 +172,10 @@ class EntityTracker:
         """Schedule a timeout callback for an entity."""
         self._cancel_timer(entity_id)
 
+        @callback
         def _handle_timeout(now: datetime) -> None:
             self._timers.pop(entity_id, None)
-            self._hass.async_create_task(self._async_timeout_expired(entity_id))
+            self._hass.add_job(self._async_timeout_expired, entity_id)
 
         self._timers[entity_id] = async_call_later(
             self._hass,

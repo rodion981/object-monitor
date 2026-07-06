@@ -48,7 +48,50 @@ class TestLabelResolver(unittest.TestCase):
         self.assertTrue(labels.is_monitored)
         self.assertEqual(labels.object_label, "qirim")
         self.assertEqual(labels.category, "security")
+        self.assertIsNone(labels.timeout_seconds)
         self.assertIsNone(labels.category_error)
+
+    def test_resolves_timeout_label_seconds(self) -> None:
+        """A timeout label can override the default timeout in seconds."""
+        labels = self.resolver.resolve_from_labels(
+            "sensor.router",
+            {"monitor_this", "qirim", "timeout_20s"},
+        )
+
+        self.assertTrue(labels.is_monitored)
+        self.assertEqual(labels.timeout_seconds, 20)
+
+    def test_resolves_timeout_label_minutes(self) -> None:
+        """A timeout label can override the default timeout in minutes."""
+        labels = self.resolver.resolve_from_labels(
+            "sensor.router",
+            {"monitor_this", "qirim", "timeout_7m"},
+        )
+
+        self.assertTrue(labels.is_monitored)
+        self.assertEqual(labels.timeout_seconds, 420)
+
+    def test_resolves_timeout_label_hours(self) -> None:
+        """A timeout label can override the default timeout in hours."""
+        labels = self.resolver.resolve_from_labels(
+            "sensor.router",
+            {"monitor_this", "qirim", "timeout_1h"},
+        )
+
+        self.assertTrue(labels.is_monitored)
+        self.assertEqual(labels.timeout_seconds, 3600)
+
+    def test_rejects_multiple_timeout_labels(self) -> None:
+        """Exactly one timeout override label may be present."""
+        labels = self.resolver.resolve_from_labels(
+            "sensor.router",
+            {"monitor_this", "qirim", "timeout_20s", "timeout_7m"},
+        )
+
+        self.assertEqual(labels.status, LabelResolutionStatus.MULTIPLE_TIMEOUTS)
+        self.assertFalse(labels.is_monitored)
+        self.assertIn("timeout_20s", labels.reason)
+        self.assertIn("timeout_7m", labels.reason)
 
     def test_requires_configured_object_label(self) -> None:
         """Unknown labels are not treated as object labels."""

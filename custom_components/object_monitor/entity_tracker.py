@@ -77,7 +77,7 @@ class EntityTracker:
             if entity.is_pending:
                 self._schedule_timer(
                     entity.entity_id,
-                    self._remaining_timeout(entity.unavailable_since),
+                    self._remaining_timeout(entity),
                 )
 
     async def async_mark_unavailable(
@@ -94,12 +94,15 @@ class EntityTracker:
             return
 
         entity = self._entities.get(labels.entity_id)
+        old_timeout_seconds = entity.timeout_seconds if entity is not None else None
         if entity is None:
+            timeout_seconds = labels.timeout_seconds or self._config.monitoring_timeout
             entity = MonitoredEntity(
                 entity_id=labels.entity_id,
                 object_label=labels.object_label,
                 category=labels.category,
                 friendly_name=friendly_name,
+                timeout_seconds=timeout_seconds,
                 unavailable_since=_utcnow(),
             )
             self._entities[labels.entity_id] = entity
@@ -107,6 +110,9 @@ class EntityTracker:
             entity.object_label = labels.object_label
             entity.category = labels.category
             entity.friendly_name = friendly_name
+            entity.timeout_seconds = (
+                labels.timeout_seconds or self._config.monitoring_timeout
+            )
             if entity.unavailable_since is None:
                 entity.unavailable_since = _utcnow()
 
@@ -114,8 +120,12 @@ class EntityTracker:
             await self._store.async_save_entity(entity)
             return
 
-        if labels.entity_id not in self._timers:
-            self._schedule_timer(labels.entity_id, self._config.monitoring_timeout)
+        timeout_changed = (
+            old_timeout_seconds is not None
+            and old_timeout_seconds != entity.timeout_seconds
+        )
+        if labels.entity_id not in self._timers or timeout_changed:
+            self._schedule_timer(labels.entity_id, self._remaining_timeout(entity))
 
         await self._store.async_save_entity(entity)
 
@@ -137,7 +147,7 @@ class EntityTracker:
                 category=entity.category,
                 unavailable_since=entity.unavailable_since,
                 notified_at=_utcnow(),
-                timeout_seconds=self._config.monitoring_timeout,
+                timeout_seconds=entity.timeout_seconds,
             )
             self._emit_event(event)
             await self._notification_manager.async_notify(event)
@@ -209,7 +219,7 @@ class EntityTracker:
             category=entity.category,
             unavailable_since=entity.unavailable_since,
             notified_at=_utcnow(),
-            timeout_seconds=self._config.monitoring_timeout,
+            timeout_seconds=entity.timeout_seconds,
         )
         self._emit_event(event)
 
@@ -221,13 +231,13 @@ class EntityTracker:
 
         await self._store.async_save_entity(entity)
 
-    def _remaining_timeout(self, unavailable_since: datetime | None) -> float:
+    def _remaining_timeout(self, entity: MonitoredEntity) -> float:
         """Calculate remaining timeout seconds for restored pending state."""
-        if unavailable_since is None:
-            return float(self._config.monitoring_timeout)
+        if entity.unavailable_since is None:
+            return float(entity.timeout_seconds)
 
-        elapsed = (_utcnow() - unavailable_since).total_seconds()
-        return max(0, self._config.monitoring_timeout - elapsed)
+        elapsed = (_utcnow() - entity.unavailable_since).total_seconds()
+        return max(0, entity.timeout_seconds - elapsed)
 
     def _emit_event(self, event: NotificationEvent) -> None:
         """Emit an optional callback event to the monitor/runtime layer."""
@@ -242,6 +252,7 @@ def _stored_to_monitored_entity(stored: StoredEntityState) -> MonitoredEntity:
         object_label=stored.object_label,
         category=stored.category,
         friendly_name=stored.friendly_name,
+        timeout_seconds=stored.timeout_seconds,
         unavailable_since=stored.unavailable_since,
         offline_confirmed=stored.offline_confirmed,
         notified_offline=stored.notified_offline,

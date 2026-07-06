@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+import re
 from typing import TYPE_CHECKING, Any
 
 from .models import EntityLabels, LabelResolutionStatus, MonitorConfig
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
+
+TIMEOUT_LABEL_PATTERN = re.compile(r"^timeout_(\d+)([smh])$")
 
 
 class LabelResolver:
@@ -79,6 +82,16 @@ class LabelResolver:
                 reason=f"multiple_object_labels: {', '.join(object_matches)}",
             )
 
+        timeout_matches = _resolve_timeout_labels(normalized_labels)
+        if len(timeout_matches) > 1:
+            return EntityLabels(
+                entity_id=entity_id,
+                labels=normalized_labels,
+                status=LabelResolutionStatus.MULTIPLE_TIMEOUTS,
+                reason="multiple_timeout_labels: "
+                f"{', '.join(label for label, _seconds in timeout_matches)}",
+            )
+
         category_matches = sorted(normalized_labels & self.category_labels)
         category = category_matches[0] if len(category_matches) == 1 else None
         category_error = (
@@ -91,6 +104,7 @@ class LabelResolver:
             status=LabelResolutionStatus.MONITORED,
             object_label=object_matches[0],
             category=category,
+            timeout_seconds=timeout_matches[0][1] if timeout_matches else None,
             category_error=category_error,
         )
 
@@ -117,3 +131,22 @@ def _entry_labels(entry: Any) -> frozenset[str]:
 def _normalize_labels(labels: Iterable[str]) -> frozenset[str]:
     """Normalize Home Assistant label IDs for stable matching."""
     return frozenset(label.strip().lower() for label in labels if label.strip())
+
+
+def _resolve_timeout_labels(labels: frozenset[str]) -> list[tuple[str, int]]:
+    """Resolve per-entity timeout labels."""
+    timeouts: list[tuple[str, int]] = []
+    multipliers = {"s": 1, "m": 60, "h": 3_600}
+
+    for label in sorted(labels):
+        match = TIMEOUT_LABEL_PATTERN.fullmatch(label)
+        if match is None:
+            continue
+
+        value = int(match.group(1))
+        if value <= 0:
+            continue
+
+        timeouts.append((label, value * multipliers[match.group(2)]))
+
+    return timeouts

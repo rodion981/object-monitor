@@ -72,6 +72,7 @@ class TestStoredModels(unittest.TestCase):
             object_label="qirim",
             category="security",
             friendly_name="Main Router",
+            timeout_seconds=20,
             unavailable_since=unavailable_since,
             offline_confirmed=True,
             notified_offline=True,
@@ -86,6 +87,7 @@ class TestStoredModels(unittest.TestCase):
         self.assertEqual(restored.object_label, entity.object_label)
         self.assertEqual(restored.category, entity.category)
         self.assertEqual(restored.friendly_name, entity.friendly_name)
+        self.assertEqual(restored.timeout_seconds, entity.timeout_seconds)
         self.assertEqual(restored.unavailable_since, unavailable_since)
         self.assertTrue(restored.offline_confirmed)
         self.assertTrue(restored.notified_offline)

@@ -62,6 +62,7 @@ class LabelResolutionStatus(StrEnum):
     MISSING_OBJECT = "missing_object"
     MULTIPLE_OBJECTS = "multiple_objects"
     MULTIPLE_CATEGORIES = "multiple_categories"
+    MULTIPLE_TIMEOUTS = "multiple_timeouts"
 
 
 @dataclass(slots=True, frozen=True)
@@ -107,6 +108,7 @@ class EntityLabels:
     status: LabelResolutionStatus
     object_label: str | None = None
     category: str | None = None
+    timeout_seconds: int | None = None
     reason: str | None = None
     category_error: str | None = None
 
@@ -124,6 +126,7 @@ class MonitoredEntity:
     object_label: str
     category: str | None
     friendly_name: str
+    timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS
     unavailable_since: datetime | None = None
     offline_confirmed: bool = False
     notified_offline: bool = False
@@ -218,6 +221,7 @@ class StoredEntityState:
     object_label: str
     category: str | None
     friendly_name: str
+    timeout_seconds: int
     unavailable_since: datetime | None
     offline_confirmed: bool
     notified_offline: bool
@@ -232,6 +236,7 @@ class StoredEntityState:
             object_label=entity.object_label,
             category=entity.category,
             friendly_name=entity.friendly_name,
+            timeout_seconds=entity.timeout_seconds,
             unavailable_since=entity.unavailable_since,
             offline_confirmed=entity.offline_confirmed,
             notified_offline=entity.notified_offline,
@@ -246,6 +251,7 @@ class StoredEntityState:
             "object_label": self.object_label,
             "category": self.category,
             "friendly_name": self.friendly_name,
+            "timeout_seconds": self.timeout_seconds,
             "unavailable_since": self.unavailable_since.isoformat()
             if self.unavailable_since
             else None,
@@ -268,6 +274,7 @@ class StoredEntityState:
             object_label=data["object_label"],
             category=data.get("category"),
             friendly_name=data.get("friendly_name") or data["entity_id"],
+            timeout_seconds=int(data.get("timeout_seconds", DEFAULT_TIMEOUT_SECONDS)),
             unavailable_since=_parse_datetime(data.get("unavailable_since")),
             offline_confirmed=bool(
                 data.get("offline_confirmed", data.get("notified_offline", False))

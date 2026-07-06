@@ -94,6 +94,16 @@ home
 security
 ```
 
+Per-entity timeout labels can override the default timeout:
+
+```text
+timeout_20s
+timeout_7m
+timeout_1h
+```
+
+Use only one timeout label per entity. If no timeout label is present, Object Monitor uses the default timeout from the integration options.
+
 ## Security System Monitoring
 
 To monitor an alarm panel, add these labels to an `alarm_control_panel` entity:

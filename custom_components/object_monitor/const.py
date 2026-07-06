@@ -14,19 +14,19 @@ DEFAULT_TIMEOUT: Final = timedelta(seconds=DEFAULT_TIMEOUT_SECONDS)
 DEFAULT_DEBUG_LOGGING: Final = False
 DEFAULT_HEARTBEAT_INTERVAL_SECONDS: Final = 0
 
-LABEL_DEVICE_MONITORING: Final = "device_monitoring"
+DEFAULT_MONITORING_LABEL: Final = "device_monitoring"
 
 CATEGORY_SECURITY: Final = "security"
 CATEGORY_LIGHT: Final = "light"
 CATEGORY_CLIMATE: Final = "climate"
-SUPPORTED_CATEGORIES: Final[frozenset[str]] = frozenset(
-    {
-        CATEGORY_SECURITY,
-        CATEGORY_LIGHT,
-        CATEGORY_CLIMATE,
-    }
+DEFAULT_CATEGORY_LABELS: Final[tuple[str, ...]] = (
+    CATEGORY_SECURITY,
+    CATEGORY_LIGHT,
+    CATEGORY_CLIMATE,
 )
 
+CONF_MONITORING_LABEL: Final = "monitoring_label"
+CONF_CATEGORY_LABELS: Final = "category_labels"
 CONF_MONITORING_TIMEOUT: Final = "monitoring_timeout"
 CONF_NOTIFICATION_MODE: Final = "notification_mode"
 CONF_OBJECT_LABELS: Final = "object_labels"

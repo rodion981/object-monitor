@@ -6,7 +6,9 @@
         "title": "Налаштування Object Monitor",
         "description": "Налаштуйте labels об'єктів і маршрутизацію сповіщень.",
         "data": {
-          "monitoring_timeout": "Таймаут моніторингу, хв",
+          "monitoring_label": "Label для моніторингу",
+          "category_labels": "Labels категорій",
+          "monitoring_timeout": "Таймаут моніторингу",
           "notification_mode": "Режим сповіщень",
           "object_labels": "Labels об'єктів",
           "notification_provider": "Провайдер сповіщень",
@@ -14,7 +16,9 @@
           "debug_logging": "Debug-логування"
         },
         "data_description": {
-          "monitoring_timeout": "Кількість хвилин, протягом яких entity має залишатися unavailable перед offline-сповіщенням.",
+          "monitoring_label": "Label, який вмикає моніторинг entity. За замовчуванням: device_monitoring.",
+          "category_labels": "Labels, які вважаються категоріями для маршрутизації. Введіть по одному label на рядок. Можна залишити порожнім, якщо категорії не потрібні.",
+          "monitoring_timeout": "Скільки entity має залишатися unavailable перед offline-сповіщенням. Можна вказати години, хвилини та секунди.",
           "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
           "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад qirim або hotel_kyiv.",
           "notification_provider": "Провайдер доставки сповіщень.",
@@ -24,14 +28,20 @@
       }
     },
     "error": {
-      "invalid_timeout": "Таймаут має бути додатною кількістю хвилин.",
+      "invalid_timeout": "Таймаут має бути додатною тривалістю.",
       "timeout_too_large": "Таймаут завеликий.",
       "invalid_heartbeat_interval": "Інтервал heartbeat має бути 0 або додатним числом.",
       "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
       "invalid_notification_provider": "Непідтримуваний провайдер сповіщень.",
+      "monitoring_label_required": "Потрібен label для моніторингу.",
+      "invalid_monitoring_label": "Label для моніторингу може містити тільки малі латинські літери, цифри та underscores.",
+      "invalid_category_label": "Labels категорій можуть містити тільки малі латинські літери, цифри та underscores.",
+      "monitoring_category_overlap": "Label для моніторингу не може одночасно бути категорією.",
+      "monitoring_object_overlap": "Label для моніторингу не може одночасно бути об'єктом.",
+      "category_object_overlap": "Один і той самий label не може одночасно бути категорією та об'єктом.",
       "object_labels_required": "Потрібен хоча б один label об'єкта.",
       "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores.",
-      "reserved_object_label": "Labels об'єктів не можуть бути device_monitoring або категоріями security, light чи climate."
+      "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій."
     },
     "abort": {
       "single_instance_allowed": "Object Monitor уже налаштовано."
@@ -43,7 +53,9 @@
         "title": "Опції Object Monitor",
         "description": "Оновіть таймаут моніторингу, labels об'єктів і маршрутизацію сповіщень.",
         "data": {
-          "monitoring_timeout": "Таймаут моніторингу, хв",
+          "monitoring_label": "Label для моніторингу",
+          "category_labels": "Labels категорій",
+          "monitoring_timeout": "Таймаут моніторингу",
           "notification_mode": "Режим сповіщень",
           "object_labels": "Labels об'єктів",
           "notification_provider": "Провайдер сповіщень",
@@ -51,7 +63,9 @@
           "debug_logging": "Debug-логування"
         },
         "data_description": {
-          "monitoring_timeout": "Кількість хвилин, протягом яких entity має залишатися unavailable перед offline-сповіщенням.",
+          "monitoring_label": "Label, який вмикає моніторинг entity. За замовчуванням: device_monitoring.",
+          "category_labels": "Labels, які вважаються категоріями для маршрутизації. Введіть по одному label на рядок. Можна залишити порожнім, якщо категорії не потрібні.",
+          "monitoring_timeout": "Скільки entity має залишатися unavailable перед offline-сповіщенням. Можна вказати години, хвилини та секунди.",
           "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
           "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад qirim або hotel_kyiv.",
           "notification_provider": "Провайдер доставки сповіщень.",
@@ -61,14 +75,20 @@
       }
     },
     "error": {
-      "invalid_timeout": "Таймаут має бути додатною кількістю хвилин.",
+      "invalid_timeout": "Таймаут має бути додатною тривалістю.",
       "timeout_too_large": "Таймаут завеликий.",
       "invalid_heartbeat_interval": "Інтервал heartbeat має бути 0 або додатним числом.",
       "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
       "invalid_notification_provider": "Непідтримуваний провайдер сповіщень.",
+      "monitoring_label_required": "Потрібен label для моніторингу.",
+      "invalid_monitoring_label": "Label для моніторингу може містити тільки малі латинські літери, цифри та underscores.",
+      "invalid_category_label": "Labels категорій можуть містити тільки малі латинські літери, цифри та underscores.",
+      "monitoring_category_overlap": "Label для моніторингу не може одночасно бути категорією.",
+      "monitoring_object_overlap": "Label для моніторингу не може одночасно бути об'єктом.",
+      "category_object_overlap": "Один і той самий label не може одночасно бути категорією та об'єктом.",
       "object_labels_required": "Потрібен хоча б один label об'єкта.",
       "invalid_object_label": "Labels об'єктів можуть містити тільки малі латинські літери, цифри та underscores.",
-      "reserved_object_label": "Labels об'єктів не можуть бути device_monitoring або категоріями security, light чи climate."
+      "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій."
     }
   },
   "selector": {
@@ -82,6 +102,14 @@
       "options": {
         "telegram": "Telegram"
       }
+    }
+  },
+  "exceptions": {
+    "unknown_object_label": {
+      "message": "Невідомий label об'єкта: {object_label}."
+    },
+    "unknown_category_label": {
+      "message": "Невідомий label категорії: {category}."
     }
   }
 }

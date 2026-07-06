@@ -11,14 +11,18 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
 from .const import (
+    CONF_CATEGORY_LABELS,
     CONF_DEBUG_LOGGING,
     CONF_HEARTBEAT_INTERVAL,
+    CONF_MONITORING_LABEL,
     CONF_MONITORING_TIMEOUT,
     CONF_NOTIFICATION_MODE,
     CONF_NOTIFICATION_PROVIDER,
     CONF_OBJECT_LABELS,
+    DEFAULT_CATEGORY_LABELS,
     DEFAULT_DEBUG_LOGGING,
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
+    DEFAULT_MONITORING_LABEL,
     DEFAULT_NOTIFICATION_MODE,
     DEFAULT_NOTIFICATION_PROVIDER,
     DEFAULT_TIMEOUT_SECONDS,
@@ -135,6 +139,8 @@ class ObjectMonitorRuntime:
         entities = self.tracker.entities if self.tracker is not None else {}
 
         return {
+            "monitoring_label": self.config.monitoring_label,
+            "category_labels": list(self.config.category_labels),
             "monitoring_timeout": self.config.monitoring_timeout,
             "notification_mode": self.config.notification_mode.value,
             "notification_provider": self.config.notification_provider.value,
@@ -154,6 +160,12 @@ class ObjectMonitorRuntime:
 def build_monitor_config(options: Mapping[str, Any]) -> MonitorConfig:
     """Build a typed monitor config from config entry options."""
     return MonitorConfig(
+        monitoring_label=str(
+            options.get(CONF_MONITORING_LABEL, DEFAULT_MONITORING_LABEL)
+        ),
+        category_labels=tuple(
+            options.get(CONF_CATEGORY_LABELS, DEFAULT_CATEGORY_LABELS)
+        ),
         monitoring_timeout=int(
             options.get(CONF_MONITORING_TIMEOUT, DEFAULT_TIMEOUT_SECONDS)
         ),

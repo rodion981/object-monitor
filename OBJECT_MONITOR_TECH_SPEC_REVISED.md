@@ -67,11 +67,13 @@ The integration must avoid:
 
 ## 4. Monitoring Selection
 
-Only entities with the label `device_monitoring` participate in monitoring.
+Only entities with the configured monitoring label participate in monitoring.
 
-Entities without `device_monitoring` must be ignored.
+The default monitoring label is `device_monitoring`.
 
-The integration must react to relevant registry changes so that adding or removing `device_monitoring` can take effect without a Home Assistant restart whenever possible.
+Entities without the configured monitoring label must be ignored.
+
+The integration must react to relevant registry changes so that adding or removing the monitoring label can take effect without a Home Assistant restart whenever possible.
 
 ---
 
@@ -96,7 +98,7 @@ Example object labels:
 
 For an entity to be valid:
 
-- it must have `device_monitoring`
+- it must have the configured monitoring label
 - it must have exactly one label from the configured object label list
 
 If no configured object label is found:
@@ -119,7 +121,9 @@ A future version may support object labels with an explicit namespace such as `o
 
 Categories are used only for notification routing and message context.
 
-Supported category labels:
+The Options Flow must include a configurable list of category labels.
+
+Default category labels:
 
 - `security`
 - `light`
@@ -129,7 +133,7 @@ The category label is not required for basic monitoring.
 
 The category label is required only when `category_routing` mode is enabled, because it determines which Telegram group topic or branch receives the notification.
 
-If Category Routing is enabled and a monitored entity has no supported category:
+If Category Routing is enabled and a monitored entity has no configured category label:
 
 - log a warning
 - skip notification for that event
@@ -383,6 +387,8 @@ No YAML configuration is required for v1.1.
 Options:
 
 - monitoring timeout, default `420`
+- monitoring label, default `device_monitoring`
+- configured category labels, default `security`, `light`, `climate`
 - notification mode:
   - `category_routing`
   - `single_routing`
@@ -394,7 +400,10 @@ Options:
 Validation:
 
 - timeout must be a positive integer
+- monitoring label must be a non-empty normalized string
+- category labels must be normalized strings
 - object labels must be non-empty normalized strings
+- monitoring, category, and object label roles must not overlap
 - notification mode must be one of the supported modes
 
 Changing options must reload or reconfigure runtime behavior safely.
@@ -543,9 +552,9 @@ Resolves monitored entity metadata from Home Assistant labels.
 
 Responsibilities:
 
-- check `device_monitoring`
+- check the configured monitoring label
 - resolve exactly one configured object label
-- resolve zero or one category label
+- resolve zero or one configured category label
 - ignore unrelated labels
 - return structured result or a reason why the entity is not monitorable
 
@@ -724,7 +733,7 @@ Tests must cover:
 - config flow creates one entry only
 - options validation
 - label resolution
-- entity without `device_monitoring` is ignored
+- entity without the configured monitoring label is ignored
 - entity with no object label is skipped
 - entity with multiple object labels is skipped
 - category routing with missing category skips notification

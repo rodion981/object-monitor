@@ -20,7 +20,6 @@ from .const import (
     SERVICE_CLEAR_ENTITY_STATE,
     SERVICE_RELOAD_MONITORED_ENTITIES,
     SERVICE_SEND_TEST_NOTIFICATION,
-    SUPPORTED_CATEGORIES,
 )
 from .models import NotificationEventType
 from .runtime import ObjectMonitorRuntime
@@ -30,7 +29,7 @@ ATTR_TEST_EVENT_TYPE = "event_type"
 SEND_TEST_NOTIFICATION_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_OBJECT_LABEL): cv.string,
-        vol.Optional(ATTR_CATEGORY): vol.Any(None, vol.In(sorted(SUPPORTED_CATEGORIES))),
+        vol.Optional(ATTR_CATEGORY): vol.Any(None, cv.string),
         vol.Optional(ATTR_TEST_EVENT_TYPE, default=EVENT_TYPE_OFFLINE): vol.In(
             [EVENT_TYPE_OFFLINE, EVENT_TYPE_RECOVERY]
         ),
@@ -77,6 +76,8 @@ async def _handle_send_test_notification(call: ServiceCall) -> None:
     """Handle a request to send a test notification."""
     runtime = _get_runtime(call.hass)
     object_label = call.data[ATTR_OBJECT_LABEL].strip().lower()
+    raw_category = call.data.get(ATTR_CATEGORY)
+    category = raw_category.strip().lower() if raw_category else None
 
     if object_label not in runtime.config.object_label_set:
         raise ServiceValidationError(
@@ -85,9 +86,16 @@ async def _handle_send_test_notification(call: ServiceCall) -> None:
             translation_placeholders={"object_label": object_label},
         )
 
+    if category and category not in runtime.config.category_label_set:
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="unknown_category_label",
+            translation_placeholders={"category": category},
+        )
+
     result = await runtime.async_send_test_notification(
         object_label=object_label,
-        category=call.data.get(ATTR_CATEGORY),
+        category=category,
         event_type=NotificationEventType(call.data[ATTR_TEST_EVENT_TYPE]),
         entity_id=call.data[ATTR_ENTITY_ID],
         friendly_name=call.data[ATTR_FRIENDLY_NAME],

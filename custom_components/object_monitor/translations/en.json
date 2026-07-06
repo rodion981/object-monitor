@@ -6,7 +6,9 @@
         "title": "Set up Object Monitor",
         "description": "Configure monitored object labels and notification routing.",
         "data": {
-          "monitoring_timeout": "Monitoring timeout, minutes",
+          "monitoring_label": "Monitoring label",
+          "category_labels": "Category labels",
+          "monitoring_timeout": "Monitoring timeout",
           "notification_mode": "Notification mode",
           "object_labels": "Object labels",
           "notification_provider": "Notification provider",
@@ -14,7 +16,9 @@
           "debug_logging": "Debug logging"
         },
         "data_description": {
-          "monitoring_timeout": "Minutes an entity must remain unavailable before an offline notification is sent.",
+          "monitoring_label": "Label that enables monitoring for an entity. Default: device_monitoring.",
+          "category_labels": "Labels treated as notification routing categories. Enter one label per line. Leave empty if categories are not needed.",
+          "monitoring_timeout": "How long an entity must remain unavailable before an offline notification is sent. Hours, minutes, and seconds can be entered.",
           "notification_mode": "Single routing sends all object notifications to one script. Category routing sends notifications to category-specific scripts.",
           "object_labels": "Labels that identify monitored objects. Enter one label per line, for example qirim or hotel_kyiv.",
           "notification_provider": "Delivery provider for notifications.",
@@ -24,14 +28,20 @@
       }
     },
     "error": {
-      "invalid_timeout": "Timeout must be a positive number of minutes.",
+      "invalid_timeout": "Timeout must be a positive duration.",
       "timeout_too_large": "Timeout is too large.",
       "invalid_heartbeat_interval": "Heartbeat interval must be 0 or a positive number.",
       "invalid_notification_mode": "Unsupported notification mode.",
       "invalid_notification_provider": "Unsupported notification provider.",
+      "monitoring_label_required": "A monitoring label is required.",
+      "invalid_monitoring_label": "The monitoring label may contain only lowercase letters, numbers, and underscores.",
+      "invalid_category_label": "Category labels may contain only lowercase letters, numbers, and underscores.",
+      "monitoring_category_overlap": "The monitoring label cannot also be a category label.",
+      "monitoring_object_overlap": "The monitoring label cannot also be an object label.",
+      "category_object_overlap": "The same label cannot be both a category label and an object label.",
       "object_labels_required": "At least one object label is required.",
       "invalid_object_label": "Object labels may contain only lowercase letters, numbers, and underscores.",
-      "reserved_object_label": "Object labels cannot be device_monitoring or category labels such as security, light, or climate."
+      "reserved_object_label": "Object labels cannot match the monitoring label or category labels."
     },
     "abort": {
       "single_instance_allowed": "Object Monitor is already configured."
@@ -43,7 +53,9 @@
         "title": "Object Monitor options",
         "description": "Update monitoring timeout, object labels, and notification routing.",
         "data": {
-          "monitoring_timeout": "Monitoring timeout, minutes",
+          "monitoring_label": "Monitoring label",
+          "category_labels": "Category labels",
+          "monitoring_timeout": "Monitoring timeout",
           "notification_mode": "Notification mode",
           "object_labels": "Object labels",
           "notification_provider": "Notification provider",
@@ -51,7 +63,9 @@
           "debug_logging": "Debug logging"
         },
         "data_description": {
-          "monitoring_timeout": "Minutes an entity must remain unavailable before an offline notification is sent.",
+          "monitoring_label": "Label that enables monitoring for an entity. Default: device_monitoring.",
+          "category_labels": "Labels treated as notification routing categories. Enter one label per line. Leave empty if categories are not needed.",
+          "monitoring_timeout": "How long an entity must remain unavailable before an offline notification is sent. Hours, minutes, and seconds can be entered.",
           "notification_mode": "Single routing sends all object notifications to one script. Category routing sends notifications to category-specific scripts.",
           "object_labels": "Labels that identify monitored objects. Enter one label per line, for example qirim or hotel_kyiv.",
           "notification_provider": "Delivery provider for notifications.",
@@ -61,14 +75,20 @@
       }
     },
     "error": {
-      "invalid_timeout": "Timeout must be a positive number of minutes.",
+      "invalid_timeout": "Timeout must be a positive duration.",
       "timeout_too_large": "Timeout is too large.",
       "invalid_heartbeat_interval": "Heartbeat interval must be 0 or a positive number.",
       "invalid_notification_mode": "Unsupported notification mode.",
       "invalid_notification_provider": "Unsupported notification provider.",
+      "monitoring_label_required": "A monitoring label is required.",
+      "invalid_monitoring_label": "The monitoring label may contain only lowercase letters, numbers, and underscores.",
+      "invalid_category_label": "Category labels may contain only lowercase letters, numbers, and underscores.",
+      "monitoring_category_overlap": "The monitoring label cannot also be a category label.",
+      "monitoring_object_overlap": "The monitoring label cannot also be an object label.",
+      "category_object_overlap": "The same label cannot be both a category label and an object label.",
       "object_labels_required": "At least one object label is required.",
       "invalid_object_label": "Object labels may contain only lowercase letters, numbers, and underscores.",
-      "reserved_object_label": "Object labels cannot be device_monitoring or category labels such as security, light, or climate."
+      "reserved_object_label": "Object labels cannot match the monitoring label or category labels."
     }
   },
   "selector": {
@@ -82,6 +102,14 @@
       "options": {
         "telegram": "Telegram"
       }
+    }
+  },
+  "exceptions": {
+    "unknown_object_label": {
+      "message": "Unknown object label: {object_label}."
+    },
+    "unknown_category_label": {
+      "message": "Unknown category label: {category}."
     }
   }
 }

@@ -13,32 +13,31 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import selector
 
 from .const import (
+    CONF_CATEGORY_LABELS,
     CONF_DEBUG_LOGGING,
     CONF_HEARTBEAT_INTERVAL,
+    CONF_MONITORING_LABEL,
     CONF_MONITORING_TIMEOUT,
     CONF_NOTIFICATION_MODE,
     CONF_NOTIFICATION_PROVIDER,
     CONF_OBJECT_LABELS,
+    DEFAULT_CATEGORY_LABELS,
     DEFAULT_DEBUG_LOGGING,
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
+    DEFAULT_MONITORING_LABEL,
     DEFAULT_NAME,
     DEFAULT_NOTIFICATION_MODE,
     DEFAULT_NOTIFICATION_PROVIDER,
     DEFAULT_TIMEOUT_SECONDS,
     DOMAIN,
-    LABEL_DEVICE_MONITORING,
     NOTIFICATION_MODE_CATEGORY_ROUTING,
     NOTIFICATION_MODE_SINGLE_ROUTING,
     PROVIDER_TELEGRAM,
-    SUPPORTED_CATEGORIES,
 )
 
 MIN_TIMEOUT_SECONDS = 1
 MAX_TIMEOUT_SECONDS = 86_400
-MIN_TIMEOUT_MINUTES = 1
-MAX_TIMEOUT_MINUTES = 1_440
 LABEL_PATTERN = re.compile(r"^[a-z0-9_]+$")
-RESERVED_LABELS = frozenset({LABEL_DEVICE_MONITORING, *SUPPORTED_CATEGORIES})
 
 
 class ObjectMonitorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -115,17 +114,28 @@ def _build_options_schema(defaults: dict[str, Any] | None) -> vol.Schema:
     return vol.Schema(
         {
             vol.Required(
+                CONF_MONITORING_LABEL,
+                default=defaults.get(CONF_MONITORING_LABEL, DEFAULT_MONITORING_LABEL),
+            ): selector.TextSelector(),
+            vol.Optional(
+                CONF_CATEGORY_LABELS,
+                default=defaults.get(
+                    CONF_CATEGORY_LABELS,
+                    "\n".join(DEFAULT_CATEGORY_LABELS),
+                ),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                )
+            ),
+            vol.Required(
                 CONF_MONITORING_TIMEOUT,
                 default=defaults.get(
                     CONF_MONITORING_TIMEOUT,
-                    _seconds_to_minutes(DEFAULT_TIMEOUT_SECONDS),
+                    _seconds_to_duration(DEFAULT_TIMEOUT_SECONDS),
                 ),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=MIN_TIMEOUT_MINUTES,
-                    max=MAX_TIMEOUT_MINUTES,
-                    mode=selector.NumberSelectorMode.BOX,
-                )
+            ): selector.DurationSelector(
+                selector.DurationSelectorConfig(enable_day=False)
             ),
             vol.Required(
                 CONF_NOTIFICATION_MODE,
@@ -189,17 +199,13 @@ def _validate_user_input(
     """Validate and normalize config/options flow input."""
     errors: dict[str, str] = {}
 
-    timeout_minutes = _coerce_int(user_input.get(CONF_MONITORING_TIMEOUT))
-    if timeout_minutes is None or timeout_minutes < MIN_TIMEOUT_MINUTES:
-        errors[CONF_MONITORING_TIMEOUT] = "invalid_timeout"
-    elif timeout_minutes > MAX_TIMEOUT_MINUTES:
-        errors[CONF_MONITORING_TIMEOUT] = "timeout_too_large"
-
-    timeout_seconds = (
-        timeout_minutes * 60
-        if timeout_minutes is not None
-        else DEFAULT_TIMEOUT_SECONDS
+    timeout_seconds = _coerce_duration_seconds(
+        user_input.get(CONF_MONITORING_TIMEOUT)
     )
+    if timeout_seconds is None or timeout_seconds < MIN_TIMEOUT_SECONDS:
+        errors[CONF_MONITORING_TIMEOUT] = "invalid_timeout"
+    elif timeout_seconds > MAX_TIMEOUT_SECONDS:
+        errors[CONF_MONITORING_TIMEOUT] = "timeout_too_large"
 
     heartbeat_interval = _coerce_int(user_input.get(CONF_HEARTBEAT_INTERVAL, 0))
     if heartbeat_interval is None or heartbeat_interval < 0:
@@ -222,16 +228,34 @@ def _validate_user_input(
     if notification_provider != PROVIDER_TELEGRAM:
         errors[CONF_NOTIFICATION_PROVIDER] = "invalid_notification_provider"
 
-    object_labels = _normalize_object_labels(user_input.get(CONF_OBJECT_LABELS))
+    monitoring_label = _normalize_single_label(
+        user_input.get(CONF_MONITORING_LABEL, DEFAULT_MONITORING_LABEL)
+    )
+    if not monitoring_label:
+        errors[CONF_MONITORING_LABEL] = "monitoring_label_required"
+    elif not LABEL_PATTERN.fullmatch(monitoring_label):
+        errors[CONF_MONITORING_LABEL] = "invalid_monitoring_label"
+
+    category_labels = _normalize_labels(user_input.get(CONF_CATEGORY_LABELS))
+    if any(not LABEL_PATTERN.fullmatch(label) for label in category_labels):
+        errors[CONF_CATEGORY_LABELS] = "invalid_category_label"
+    elif monitoring_label and monitoring_label in category_labels:
+        errors[CONF_CATEGORY_LABELS] = "monitoring_category_overlap"
+
+    object_labels = _normalize_labels(user_input.get(CONF_OBJECT_LABELS))
     if not object_labels:
         errors[CONF_OBJECT_LABELS] = "object_labels_required"
     elif any(not LABEL_PATTERN.fullmatch(label) for label in object_labels):
         errors[CONF_OBJECT_LABELS] = "invalid_object_label"
-    elif any(label in RESERVED_LABELS for label in object_labels):
-        errors[CONF_OBJECT_LABELS] = "reserved_object_label"
+    elif monitoring_label and monitoring_label in object_labels:
+        errors[CONF_OBJECT_LABELS] = "monitoring_object_overlap"
+    elif set(object_labels) & set(category_labels):
+        errors[CONF_OBJECT_LABELS] = "category_object_overlap"
 
     options = {
-        CONF_MONITORING_TIMEOUT: timeout_seconds,
+        CONF_MONITORING_LABEL: monitoring_label or DEFAULT_MONITORING_LABEL,
+        CONF_CATEGORY_LABELS: list(category_labels),
+        CONF_MONITORING_TIMEOUT: timeout_seconds or DEFAULT_TIMEOUT_SECONDS,
         CONF_NOTIFICATION_MODE: notification_mode,
         CONF_OBJECT_LABELS: list(object_labels),
         CONF_NOTIFICATION_PROVIDER: notification_provider,
@@ -249,7 +273,14 @@ def _validate_user_input(
 def _options_for_form(options: Mapping[str, Any]) -> dict[str, Any]:
     """Convert stored options to form defaults."""
     return {
-        CONF_MONITORING_TIMEOUT: _seconds_to_minutes(
+        CONF_MONITORING_LABEL: options.get(
+            CONF_MONITORING_LABEL,
+            DEFAULT_MONITORING_LABEL,
+        ),
+        CONF_CATEGORY_LABELS: "\n".join(
+            options.get(CONF_CATEGORY_LABELS, DEFAULT_CATEGORY_LABELS)
+        ),
+        CONF_MONITORING_TIMEOUT: _seconds_to_duration(
             options.get(
                 CONF_MONITORING_TIMEOUT,
                 DEFAULT_TIMEOUT_SECONDS,
@@ -272,8 +303,15 @@ def _options_for_form(options: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _normalize_object_labels(value: Any) -> tuple[str, ...]:
-    """Normalize object label input while preserving user order."""
+def _normalize_single_label(value: Any) -> str:
+    """Normalize a single label value."""
+    if value is None:
+        return ""
+    return str(value).strip().lower()
+
+
+def _normalize_labels(value: Any) -> tuple[str, ...]:
+    """Normalize label input while preserving user order."""
     if value is None:
         return ()
 
@@ -308,6 +346,28 @@ def _coerce_int(value: Any) -> int | None:
         return None
 
 
-def _seconds_to_minutes(value: int) -> int:
-    """Convert seconds to rounded-up minutes for form defaults."""
-    return max(MIN_TIMEOUT_MINUTES, (value + 59) // 60)
+def _coerce_duration_seconds(value: Any) -> int | None:
+    """Coerce duration selector input to total seconds."""
+    if isinstance(value, Mapping):
+        days = _coerce_int(value.get("days", 0))
+        hours = _coerce_int(value.get("hours", 0))
+        minutes = _coerce_int(value.get("minutes", 0))
+        seconds = _coerce_int(value.get("seconds", 0))
+        parts = (days, hours, minutes, seconds)
+        if any(part is None or part < 0 for part in parts):
+            return None
+        return days * 86_400 + hours * 3_600 + minutes * 60 + seconds
+
+    return _coerce_int(value)
+
+
+def _seconds_to_duration(value: int) -> dict[str, int]:
+    """Convert stored seconds to duration selector defaults."""
+    seconds = max(0, int(value))
+    hours, remainder = divmod(seconds, 3_600)
+    minutes, seconds = divmod(remainder, 60)
+    return {
+        "hours": hours,
+        "minutes": minutes,
+        "seconds": seconds,
+    }

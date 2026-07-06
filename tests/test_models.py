@@ -9,6 +9,7 @@ from module_loader import import_object_monitor_module
 
 models_module = import_object_monitor_module("models")
 
+MonitorConfig = models_module.MonitorConfig
 MonitoredEntity = models_module.MonitoredEntity
 NotificationEventType = models_module.NotificationEventType
 StoredEntityState = models_module.StoredEntityState
@@ -17,6 +18,13 @@ StoredMonitorState = models_module.StoredMonitorState
 
 class TestStoredModels(unittest.TestCase):
     """Test persistence model serialization."""
+
+    def test_monitor_config_label_defaults(self) -> None:
+        """Default label roles preserve existing integrations."""
+        config = MonitorConfig()
+
+        self.assertEqual(config.monitoring_label, "device_monitoring")
+        self.assertEqual(config.category_labels, ("security", "light", "climate"))
 
     def test_stored_entity_round_trip(self) -> None:
         """Stored entity state survives JSON serialization."""

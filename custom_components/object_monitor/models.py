@@ -9,7 +9,9 @@ from typing import Any
 
 from .const import (
     DEFAULT_DEBUG_LOGGING,
+    DEFAULT_CATEGORY_LABELS,
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
+    DEFAULT_MONITORING_LABEL,
     DEFAULT_NOTIFICATION_MODE,
     DEFAULT_NOTIFICATION_PROVIDER,
     DEFAULT_TIMEOUT_SECONDS,
@@ -50,6 +52,8 @@ class LabelResolutionStatus(StrEnum):
 class MonitorConfig:
     """Runtime configuration for a loaded Object Monitor config entry."""
 
+    monitoring_label: str = DEFAULT_MONITORING_LABEL
+    category_labels: tuple[str, ...] = DEFAULT_CATEGORY_LABELS
     monitoring_timeout: int = DEFAULT_TIMEOUT_SECONDS
     notification_mode: NotificationMode = NotificationMode(DEFAULT_NOTIFICATION_MODE)
     object_labels: tuple[str, ...] = ()
@@ -61,6 +65,11 @@ class MonitorConfig:
     def object_label_set(self) -> frozenset[str]:
         """Return configured object labels as a set for fast lookups."""
         return frozenset(self.object_labels)
+
+    @property
+    def category_label_set(self) -> frozenset[str]:
+        """Return configured category labels as a set for fast lookups."""
+        return frozenset(self.category_labels)
 
 
 @dataclass(slots=True, frozen=True)

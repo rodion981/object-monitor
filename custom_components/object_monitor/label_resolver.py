@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any
 
-from .const import LABEL_DEVICE_MONITORING, SUPPORTED_CATEGORIES
 from .models import EntityLabels, LabelResolutionStatus, MonitorConfig
 
 if TYPE_CHECKING:
@@ -24,6 +23,11 @@ class LabelResolver:
     def object_labels(self) -> frozenset[str]:
         """Return configured object labels."""
         return self._config.object_label_set
+
+    @property
+    def category_labels(self) -> frozenset[str]:
+        """Return configured category labels."""
+        return self._config.category_label_set
 
     def resolve_entity(self, entity_id: str) -> EntityLabels:
         """Resolve monitoring labels for one entity ID."""
@@ -50,7 +54,7 @@ class LabelResolver:
         """Resolve monitoring metadata from raw labels."""
         normalized_labels = _normalize_labels(labels)
 
-        if LABEL_DEVICE_MONITORING not in normalized_labels:
+        if self._config.monitoring_label not in normalized_labels:
             return EntityLabels(
                 entity_id=entity_id,
                 labels=normalized_labels,
@@ -75,7 +79,7 @@ class LabelResolver:
                 reason=f"multiple_object_labels: {', '.join(object_matches)}",
             )
 
-        category_matches = sorted(normalized_labels & SUPPORTED_CATEGORIES)
+        category_matches = sorted(normalized_labels & self.category_labels)
         category = category_matches[0] if len(category_matches) == 1 else None
         category_error = (
             "multiple_category_labels" if len(category_matches) > 1 else None

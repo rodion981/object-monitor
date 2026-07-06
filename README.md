@@ -2,11 +2,11 @@
 
 Object Monitor is a Home Assistant custom integration for monitoring unavailable entities across multiple customer objects.
 
-The integration is event-driven and uses Home Assistant labels:
+The integration is event-driven and uses Home Assistant labels. Label roles are configurable in the integration options:
 
-- `device_monitoring` selects entities for monitoring.
+- Monitoring label selects entities for monitoring. Default: `device_monitoring`.
 - Configured object labels, such as `qirim` or `hotel_kyiv`, identify the monitored object.
-- Optional category labels, such as `security`, `light`, or `climate`, can route notifications to Telegram topics.
+- Optional category labels can route notifications to Telegram topics. Defaults: `security`, `light`, `climate`.
 
 ## Installation with HACS
 
@@ -32,7 +32,11 @@ Add the integration from:
 Settings -> Devices & services -> Add integration -> Object Monitor
 ```
 
-Configure object labels, for example:
+Configure label roles:
+
+- Monitoring label: `device_monitoring`
+- Category labels: `security`, `light`, `climate`, or your own labels
+- Object labels, for example:
 
 ```text
 qirim

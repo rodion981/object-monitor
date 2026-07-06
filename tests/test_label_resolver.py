@@ -21,11 +21,15 @@ class TestLabelResolver(unittest.TestCase):
         """Create a resolver with configured object labels."""
         self.resolver = LabelResolver(
             hass=None,
-            config=MonitorConfig(object_labels=("qirim", "hotel_kyiv")),
+            config=MonitorConfig(
+                monitoring_label="monitor_this",
+                category_labels=("security", "power"),
+                object_labels=("qirim", "hotel_kyiv"),
+            ),
         )
 
     def test_ignores_entity_without_monitoring_label(self) -> None:
-        """Entities without device_monitoring are ignored."""
+        """Entities without the configured monitoring label are ignored."""
         labels = self.resolver.resolve_from_labels(
             "sensor.router",
             {"qirim", "security"},
@@ -38,7 +42,7 @@ class TestLabelResolver(unittest.TestCase):
         """A valid monitored entity resolves object and category."""
         labels = self.resolver.resolve_from_labels(
             "sensor.router",
-            {"device_monitoring", "qirim", "security", "wifi"},
+            {"monitor_this", "qirim", "security", "wifi"},
         )
 
         self.assertTrue(labels.is_monitored)
@@ -50,7 +54,7 @@ class TestLabelResolver(unittest.TestCase):
         """Unknown labels are not treated as object labels."""
         labels = self.resolver.resolve_from_labels(
             "sensor.router",
-            {"device_monitoring", "critical", "wifi"},
+            {"monitor_this", "critical", "wifi"},
         )
 
         self.assertEqual(labels.status, LabelResolutionStatus.MISSING_OBJECT)
@@ -60,7 +64,7 @@ class TestLabelResolver(unittest.TestCase):
         """Exactly one configured object label must be present."""
         labels = self.resolver.resolve_from_labels(
             "sensor.router",
-            {"device_monitoring", "qirim", "hotel_kyiv"},
+            {"monitor_this", "qirim", "hotel_kyiv"},
         )
 
         self.assertEqual(labels.status, LabelResolutionStatus.MULTIPLE_OBJECTS)
@@ -72,13 +76,24 @@ class TestLabelResolver(unittest.TestCase):
         """Category ambiguity does not disable monitoring itself."""
         labels = self.resolver.resolve_from_labels(
             "sensor.router",
-            {"device_monitoring", "qirim", "security", "light"},
+            {"monitor_this", "qirim", "security", "power"},
         )
 
         self.assertTrue(labels.is_monitored)
         self.assertEqual(labels.object_label, "qirim")
         self.assertIsNone(labels.category)
         self.assertEqual(labels.category_error, "multiple_category_labels")
+
+    def test_device_monitoring_is_not_special_when_custom_label_is_configured(
+        self,
+    ) -> None:
+        """The default monitoring label is not hard-coded into resolution."""
+        labels = self.resolver.resolve_from_labels(
+            "sensor.router",
+            {"device_monitoring", "qirim", "security"},
+        )
+
+        self.assertEqual(labels.status, LabelResolutionStatus.NOT_MONITORED)
 
 
 if __name__ == "__main__":

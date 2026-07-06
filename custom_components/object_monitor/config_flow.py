@@ -35,6 +35,8 @@ from .const import (
 
 MIN_TIMEOUT_SECONDS = 1
 MAX_TIMEOUT_SECONDS = 86_400
+MIN_TIMEOUT_MINUTES = 1
+MAX_TIMEOUT_MINUTES = 1_440
 LABEL_PATTERN = re.compile(r"^[a-z0-9_]+$")
 RESERVED_LABELS = frozenset({LABEL_DEVICE_MONITORING, *SUPPORTED_CATEGORIES})
 
@@ -116,12 +118,12 @@ def _build_options_schema(defaults: dict[str, Any] | None) -> vol.Schema:
                 CONF_MONITORING_TIMEOUT,
                 default=defaults.get(
                     CONF_MONITORING_TIMEOUT,
-                    DEFAULT_TIMEOUT_SECONDS,
+                    _seconds_to_minutes(DEFAULT_TIMEOUT_SECONDS),
                 ),
             ): selector.NumberSelector(
                 selector.NumberSelectorConfig(
-                    min=MIN_TIMEOUT_SECONDS,
-                    max=MAX_TIMEOUT_SECONDS,
+                    min=MIN_TIMEOUT_MINUTES,
+                    max=MAX_TIMEOUT_MINUTES,
                     mode=selector.NumberSelectorMode.BOX,
                 )
             ),
@@ -187,11 +189,17 @@ def _validate_user_input(
     """Validate and normalize config/options flow input."""
     errors: dict[str, str] = {}
 
-    timeout = _coerce_int(user_input.get(CONF_MONITORING_TIMEOUT))
-    if timeout is None or timeout < MIN_TIMEOUT_SECONDS:
+    timeout_minutes = _coerce_int(user_input.get(CONF_MONITORING_TIMEOUT))
+    if timeout_minutes is None or timeout_minutes < MIN_TIMEOUT_MINUTES:
         errors[CONF_MONITORING_TIMEOUT] = "invalid_timeout"
-    elif timeout > MAX_TIMEOUT_SECONDS:
+    elif timeout_minutes > MAX_TIMEOUT_MINUTES:
         errors[CONF_MONITORING_TIMEOUT] = "timeout_too_large"
+
+    timeout_seconds = (
+        timeout_minutes * 60
+        if timeout_minutes is not None
+        else DEFAULT_TIMEOUT_SECONDS
+    )
 
     heartbeat_interval = _coerce_int(user_input.get(CONF_HEARTBEAT_INTERVAL, 0))
     if heartbeat_interval is None or heartbeat_interval < 0:
@@ -223,7 +231,7 @@ def _validate_user_input(
         errors[CONF_OBJECT_LABELS] = "reserved_object_label"
 
     options = {
-        CONF_MONITORING_TIMEOUT: timeout or DEFAULT_TIMEOUT_SECONDS,
+        CONF_MONITORING_TIMEOUT: timeout_seconds,
         CONF_NOTIFICATION_MODE: notification_mode,
         CONF_OBJECT_LABELS: list(object_labels),
         CONF_NOTIFICATION_PROVIDER: notification_provider,
@@ -241,9 +249,11 @@ def _validate_user_input(
 def _options_for_form(options: Mapping[str, Any]) -> dict[str, Any]:
     """Convert stored options to form defaults."""
     return {
-        CONF_MONITORING_TIMEOUT: options.get(
-            CONF_MONITORING_TIMEOUT,
-            DEFAULT_TIMEOUT_SECONDS,
+        CONF_MONITORING_TIMEOUT: _seconds_to_minutes(
+            options.get(
+                CONF_MONITORING_TIMEOUT,
+                DEFAULT_TIMEOUT_SECONDS,
+            )
         ),
         CONF_NOTIFICATION_MODE: options.get(
             CONF_NOTIFICATION_MODE,
@@ -296,3 +306,8 @@ def _coerce_int(value: Any) -> int | None:
         return int(value)
     except (TypeError, ValueError):
         return None
+
+
+def _seconds_to_minutes(value: int) -> int:
+    """Convert seconds to rounded-up minutes for form defaults."""
+    return max(MIN_TIMEOUT_MINUTES, (value + 59) // 60)

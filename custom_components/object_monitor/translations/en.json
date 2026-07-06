@@ -6,7 +6,7 @@
         "title": "Set up Object Monitor",
         "description": "Configure monitored object labels and notification routing.",
         "data": {
-          "monitoring_timeout": "Monitoring timeout",
+          "monitoring_timeout": "Monitoring timeout, minutes",
           "notification_mode": "Notification mode",
           "object_labels": "Object labels",
           "notification_provider": "Notification provider",
@@ -14,7 +14,7 @@
           "debug_logging": "Debug logging"
         },
         "data_description": {
-          "monitoring_timeout": "Seconds an entity must remain unavailable before an offline notification is sent.",
+          "monitoring_timeout": "Minutes an entity must remain unavailable before an offline notification is sent.",
           "notification_mode": "Single routing sends all object notifications to one script. Category routing sends notifications to category-specific scripts.",
           "object_labels": "Labels that identify monitored objects. Enter one label per line, for example qirim or hotel_kyiv.",
           "notification_provider": "Delivery provider for notifications.",
@@ -24,7 +24,7 @@
       }
     },
     "error": {
-      "invalid_timeout": "Timeout must be a positive number.",
+      "invalid_timeout": "Timeout must be a positive number of minutes.",
       "timeout_too_large": "Timeout is too large.",
       "invalid_heartbeat_interval": "Heartbeat interval must be 0 or a positive number.",
       "invalid_notification_mode": "Unsupported notification mode.",
@@ -43,7 +43,7 @@
         "title": "Object Monitor options",
         "description": "Update monitoring timeout, object labels, and notification routing.",
         "data": {
-          "monitoring_timeout": "Monitoring timeout",
+          "monitoring_timeout": "Monitoring timeout, minutes",
           "notification_mode": "Notification mode",
           "object_labels": "Object labels",
           "notification_provider": "Notification provider",
@@ -51,7 +51,7 @@
           "debug_logging": "Debug logging"
         },
         "data_description": {
-          "monitoring_timeout": "Seconds an entity must remain unavailable before an offline notification is sent.",
+          "monitoring_timeout": "Minutes an entity must remain unavailable before an offline notification is sent.",
           "notification_mode": "Single routing sends all object notifications to one script. Category routing sends notifications to category-specific scripts.",
           "object_labels": "Labels that identify monitored objects. Enter one label per line, for example qirim or hotel_kyiv.",
           "notification_provider": "Delivery provider for notifications.",
@@ -61,7 +61,7 @@
       }
     },
     "error": {
-      "invalid_timeout": "Timeout must be a positive number.",
+      "invalid_timeout": "Timeout must be a positive number of minutes.",
       "timeout_too_large": "Timeout is too large.",
       "invalid_heartbeat_interval": "Heartbeat interval must be 0 or a positive number.",
       "invalid_notification_mode": "Unsupported notification mode.",

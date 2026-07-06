@@ -35,7 +35,7 @@ SEND_TEST_NOTIFICATION_SCHEMA = vol.Schema(
             [EVENT_TYPE_OFFLINE, EVENT_TYPE_RECOVERY]
         ),
         vol.Optional(ATTR_ENTITY_ID, default="sensor.object_monitor_test"): cv.string,
-        vol.Optional(ATTR_FRIENDLY_NAME, default="Object Monitor Test"): cv.string,
+        vol.Optional(ATTR_FRIENDLY_NAME, default="Тест Object Monitor"): cv.string,
     }
 )
 

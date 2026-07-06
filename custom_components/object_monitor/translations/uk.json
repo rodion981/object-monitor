@@ -6,7 +6,7 @@
         "title": "Налаштування Object Monitor",
         "description": "Налаштуйте labels об'єктів і маршрутизацію сповіщень.",
         "data": {
-          "monitoring_timeout": "Таймаут моніторингу",
+          "monitoring_timeout": "Таймаут моніторингу, хв",
           "notification_mode": "Режим сповіщень",
           "object_labels": "Labels об'єктів",
           "notification_provider": "Провайдер сповіщень",
@@ -14,7 +14,7 @@
           "debug_logging": "Debug-логування"
         },
         "data_description": {
-          "monitoring_timeout": "Кількість секунд, протягом яких entity має залишатися unavailable перед offline-сповіщенням.",
+          "monitoring_timeout": "Кількість хвилин, протягом яких entity має залишатися unavailable перед offline-сповіщенням.",
           "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
           "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад qirim або hotel_kyiv.",
           "notification_provider": "Провайдер доставки сповіщень.",
@@ -24,7 +24,7 @@
       }
     },
     "error": {
-      "invalid_timeout": "Таймаут має бути додатним числом.",
+      "invalid_timeout": "Таймаут має бути додатною кількістю хвилин.",
       "timeout_too_large": "Таймаут завеликий.",
       "invalid_heartbeat_interval": "Інтервал heartbeat має бути 0 або додатним числом.",
       "invalid_notification_mode": "Непідтримуваний режим сповіщень.",
@@ -43,7 +43,7 @@
         "title": "Опції Object Monitor",
         "description": "Оновіть таймаут моніторингу, labels об'єктів і маршрутизацію сповіщень.",
         "data": {
-          "monitoring_timeout": "Таймаут моніторингу",
+          "monitoring_timeout": "Таймаут моніторингу, хв",
           "notification_mode": "Режим сповіщень",
           "object_labels": "Labels об'єктів",
           "notification_provider": "Провайдер сповіщень",
@@ -51,7 +51,7 @@
           "debug_logging": "Debug-логування"
         },
         "data_description": {
-          "monitoring_timeout": "Кількість секунд, протягом яких entity має залишатися unavailable перед offline-сповіщенням.",
+          "monitoring_timeout": "Кількість хвилин, протягом яких entity має залишатися unavailable перед offline-сповіщенням.",
           "notification_mode": "Single routing надсилає всі сповіщення об'єкта в один script. Category routing надсилає сповіщення в scripts за категоріями.",
           "object_labels": "Labels, які визначають моніторингові об'єкти. Введіть по одному label на рядок, наприклад qirim або hotel_kyiv.",
           "notification_provider": "Провайдер доставки сповіщень.",
@@ -61,7 +61,7 @@
       }
     },
     "error": {
-      "invalid_timeout": "Таймаут має бути додатним числом.",
+      "invalid_timeout": "Таймаут має бути додатною кількістю хвилин.",
       "timeout_too_large": "Таймаут завеликий.",
       "invalid_heartbeat_interval": "Інтервал heartbeat має бути 0 або додатним числом.",
       "invalid_notification_mode": "Непідтримуваний режим сповіщень.",

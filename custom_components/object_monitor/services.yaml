@@ -37,7 +37,7 @@ send_test_notification:
       description: Entity ID shown in the test notification.
     friendly_name:
       required: false
-      default: Object Monitor Test
+      default: Тест Object Monitor
       selector:
         text: {}
       name: Friendly name

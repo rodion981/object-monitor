@@ -10,6 +10,7 @@ from homeassistant.const import (
     EVENT_STATE_CHANGED,
 )
 from homeassistant.core import CALLBACK_TYPE, Event, HomeAssistant, State, callback
+from homeassistant.helpers import entity_registry as er
 
 from .const import (
     EVENT_ENTITY_REGISTRY_UPDATED,
@@ -81,7 +82,7 @@ class ObjectMonitor:
             if _is_unavailable_state(state):
                 await self._tracker.async_mark_unavailable(
                     labels,
-                    _friendly_name(entity_id, state),
+                    _friendly_name(self._hass, entity_id, state),
                 )
             else:
                 await self._tracker.async_mark_available(entity_id)
@@ -120,7 +121,7 @@ class ObjectMonitor:
         if _is_unavailable_state(new_state):
             await self._tracker.async_mark_unavailable(
                 labels,
-                _friendly_name(entity_id, new_state),
+                _friendly_name(self._hass, entity_id, new_state),
             )
             return
 
@@ -149,7 +150,7 @@ class ObjectMonitor:
         if _is_unavailable_state(state):
             await self._tracker.async_mark_unavailable(
                 labels,
-                _friendly_name(entity_id, state),
+                _friendly_name(self._hass, entity_id, state),
             )
         else:
             await self._tracker.async_mark_available(entity_id)
@@ -171,8 +172,16 @@ def _is_unavailable_state(state: Any) -> bool:
     return isinstance(state, State) and state.state == STATE_UNAVAILABLE
 
 
-def _friendly_name(entity_id: str, state: Any) -> str:
+def _friendly_name(hass: HomeAssistant, entity_id: str, state: Any) -> str:
     """Return a user-facing entity name."""
+    registry = er.async_get(hass)
+    entry = registry.async_get(entity_id)
+    if entry is not None:
+        for attribute in ("name", "name_by_user"):
+            value = getattr(entry, attribute, None)
+            if value:
+                return str(value)
+
     if not isinstance(state, State):
         return entity_id
 

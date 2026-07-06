@@ -100,27 +100,49 @@ def _script_service_name(script_entity_id: str) -> str:
 
 def _format_message(event: NotificationEvent) -> str:
     """Format an Object Monitor event as a Telegram message."""
-    category = event.category or "unknown"
+    category = event.category or "не вказано"
 
     if event.event_type is NotificationEventType.OFFLINE:
         return (
             f"\U0001f534 {event.friendly_name}\n\n"
-            "Entity\n"
+            "Сутність\n"
             f"{event.entity_id}\n\n"
-            "Object\n"
+            "Об'єкт\n"
             f"{event.object_label}\n\n"
-            "Category\n"
+            "Категорія\n"
             f"{category}\n\n"
-            f"Unavailable for more than {event.timeout_seconds} seconds."
+            f"Недоступна понад {_format_duration(event.timeout_seconds)}."
         )
 
     return (
         f"\U0001f7e2 {event.friendly_name}\n\n"
-        "Recovered.\n\n"
-        "Entity\n"
+        "Відновлено.\n\n"
+        "Сутність\n"
         f"{event.entity_id}\n\n"
-        "Object\n"
+        "Об'єкт\n"
         f"{event.object_label}\n\n"
-        "Category\n"
+        "Категорія\n"
         f"{category}"
     )
+
+
+def _format_duration(seconds: int) -> str:
+    """Format a duration in Ukrainian."""
+    if seconds < 60:
+        return f"{seconds} {_plural(seconds, 'секунду', 'секунди', 'секунд')}"
+
+    minutes = round(seconds / 60)
+    return f"{minutes} {_plural(minutes, 'хвилину', 'хвилини', 'хвилин')}"
+
+
+def _plural(value: int, one: str, few: str, many: str) -> str:
+    """Return the Ukrainian plural form for a positive integer."""
+    last_two = value % 100
+    last = value % 10
+    if 11 <= last_two <= 14:
+        return many
+    if last == 1:
+        return one
+    if 2 <= last <= 4:
+        return few
+    return many

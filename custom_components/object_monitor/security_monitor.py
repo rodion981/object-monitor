@@ -63,6 +63,8 @@ class SecurityMonitor:
             return
 
         self._started = True
+        await self.async_reconcile()
+
         self._unsubscribers.append(
             self._hass.bus.async_listen(
                 EVENT_STATE_CHANGED,
@@ -75,8 +77,6 @@ class SecurityMonitor:
                 self._handle_entity_registry_updated_event,
             )
         )
-
-        await self.async_reconcile()
 
     async def async_stop(self) -> None:
         """Stop security monitoring."""

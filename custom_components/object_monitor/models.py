@@ -15,6 +15,10 @@ from .const import (
     DEFAULT_OFF_STATE_VALUES,
     DEFAULT_ON_STATE_VALUES,
     DEFAULT_TIMEOUT_SECONDS,
+    EVENT_OBJECT_MONITOR_OFFLINE,
+    EVENT_OBJECT_MONITOR_ON_OFF_STATE,
+    EVENT_OBJECT_MONITOR_RECOVERY,
+    EVENT_OBJECT_MONITOR_SECURITY_STATE,
     EVENT_TYPE_ON_OFF_STATE,
     EVENT_TYPE_SECURITY_STATE,
 )
@@ -25,6 +29,14 @@ class NotificationEventType(StrEnum):
 
     OFFLINE = "offline"
     RECOVERY = "recovery"
+
+    @property
+    def ha_event_type(self) -> str:
+        """Return the Home Assistant event bus type for this event."""
+        if self is NotificationEventType.OFFLINE:
+            return EVENT_OBJECT_MONITOR_OFFLINE
+
+        return EVENT_OBJECT_MONITOR_RECOVERY
 
 
 class SecuritySystemState(StrEnum):
@@ -145,6 +157,11 @@ class NotificationEvent:
     notified_at: datetime | None = None
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS
 
+    @property
+    def ha_event_type(self) -> str:
+        """Return the Home Assistant event bus type for this event."""
+        return self.event_type.ha_event_type
+
     def as_event_data(self) -> dict[str, Any]:
         """Return serializable data suitable for the Home Assistant event bus."""
         return {
@@ -173,6 +190,11 @@ class SecurityStateEvent:
     category: str = "security"
     notified_at: datetime | None = None
 
+    @property
+    def ha_event_type(self) -> str:
+        """Return the Home Assistant event bus type for this event."""
+        return EVENT_OBJECT_MONITOR_SECURITY_STATE
+
     def as_event_data(self) -> dict[str, Any]:
         """Return serializable data suitable for the Home Assistant event bus."""
         return {
@@ -200,6 +222,11 @@ class OnOffStateEvent:
     previous_state: str
     state: str
     notified_at: datetime | None = None
+
+    @property
+    def ha_event_type(self) -> str:
+        """Return the Home Assistant event bus type for this event."""
+        return EVENT_OBJECT_MONITOR_ON_OFF_STATE
 
     def as_event_data(self) -> dict[str, Any]:
         """Return serializable data suitable for the Home Assistant event bus."""

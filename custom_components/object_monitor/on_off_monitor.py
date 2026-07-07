@@ -16,7 +16,6 @@ from homeassistant.helpers import entity_registry as er
 
 from .const import (
     EVENT_ENTITY_REGISTRY_UPDATED,
-    EVENT_OBJECT_MONITOR,
     ON_OFF_MONITOR_LABEL,
 )
 from .models import MonitorConfig, OnOffStateEvent
@@ -162,7 +161,10 @@ class OnOffMonitor:
             state=state,
             notified_at=_utcnow(),
         )
-        self._hass.bus.async_fire(EVENT_OBJECT_MONITOR, event_payload.as_event_data())
+        self._hass.bus.async_fire(
+            event_payload.ha_event_type,
+            event_payload.as_event_data(),
+        )
         await self._notification_manager.async_notify(event_payload)
 
     @callback

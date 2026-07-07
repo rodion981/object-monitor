@@ -11,6 +11,7 @@ models_module = import_object_monitor_module("models")
 
 MonitorConfig = models_module.MonitorConfig
 MonitoredEntity = models_module.MonitoredEntity
+NotificationEvent = models_module.NotificationEvent
 NotificationEventType = models_module.NotificationEventType
 OnOffStateEvent = models_module.OnOffStateEvent
 SecurityStateEvent = models_module.SecurityStateEvent
@@ -57,6 +58,7 @@ class TestStoredModels(unittest.TestCase):
 
         data = event.as_event_data()
 
+        self.assertEqual(event.ha_event_type, "object_monitor_security_state")
         self.assertEqual(data["event_type"], "security_state")
         self.assertEqual(data["entity_id"], "alarm_control_panel.home")
         self.assertEqual(data["object_label"], "home")
@@ -80,6 +82,7 @@ class TestStoredModels(unittest.TestCase):
 
         data = event.as_event_data()
 
+        self.assertEqual(event.ha_event_type, "object_monitor_on_off_state")
         self.assertEqual(data["event_type"], "on_off_state")
         self.assertEqual(data["entity_id"], "binary_sensor.home_power")
         self.assertEqual(data["friendly_name"], "Main Power")
@@ -120,6 +123,26 @@ class TestStoredModels(unittest.TestCase):
         self.assertTrue(restored.notified_offline)
         self.assertEqual(restored.last_notification_type, NotificationEventType.OFFLINE)
         self.assertEqual(restored.last_notified_at, notified_at)
+
+    def test_availability_event_uses_dedicated_ha_event_type(self) -> None:
+        """Availability events expose dedicated Home Assistant event names."""
+        offline_event = NotificationEvent(
+            event_type=NotificationEventType.OFFLINE,
+            entity_id="sensor.router",
+            friendly_name="Router",
+            object_label="home",
+            category="internet",
+        )
+        recovery_event = NotificationEvent(
+            event_type=NotificationEventType.RECOVERY,
+            entity_id="sensor.router",
+            friendly_name="Router",
+            object_label="home",
+            category="internet",
+        )
+
+        self.assertEqual(offline_event.ha_event_type, "object_monitor_offline")
+        self.assertEqual(recovery_event.ha_event_type, "object_monitor_recovery")
 
     def test_stored_monitor_state_ignores_empty_data(self) -> None:
         """Empty storage data creates an empty state."""

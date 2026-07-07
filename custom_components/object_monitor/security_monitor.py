@@ -18,7 +18,6 @@ from .const import (
     ALARM_CONTROL_PANEL_DOMAIN,
     CATEGORY_SECURITY,
     EVENT_ENTITY_REGISTRY_UPDATED,
-    EVENT_OBJECT_MONITOR,
     SECURITY_SYSTEM_LABEL,
 )
 from .models import MonitorConfig, SecurityStateEvent, SecuritySystemState
@@ -159,7 +158,10 @@ class SecurityMonitor:
             category=CATEGORY_SECURITY,
             notified_at=_utcnow(),
         )
-        self._hass.bus.async_fire(EVENT_OBJECT_MONITOR, event_payload.as_event_data())
+        self._hass.bus.async_fire(
+            event_payload.ha_event_type,
+            event_payload.as_event_data(),
+        )
         await self._notification_manager.async_notify(event_payload)
 
     @callback

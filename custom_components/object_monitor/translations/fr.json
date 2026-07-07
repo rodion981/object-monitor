@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Configurer Object Event Monitor",
-        "description": "Choisissez les labels Home Assistant qui contrôlent la surveillance, les objets et les catégories d'événements. Utilisez security_system pour les centrales d'alarme et state_monitor pour les états on/off. L'intégration émet l'événement HA object_monitor_event pour vos automatisations.",
+        "description": "Choisissez les labels Home Assistant qui contrôlent la surveillance, les objets et les catégories d'événements. Utilisez security_system pour les centrales d'alarme et state_monitor pour les états on/off. L'intégration émet des événements HA dédiés pour vos automatisations.",
         "data": {
           "monitoring_label": "Label qui active la surveillance",
           "monitoring_timeout": "Timeout par défaut",
@@ -60,7 +60,7 @@
     "step": {
       "init": {
         "title": "Options d'Object Event Monitor",
-        "description": "Mettez à jour les labels Home Assistant qui contrôlent la surveillance, les objets et les catégories d'événements. Utilisez security_system pour les centrales d'alarme et state_monitor pour les états on/off. L'intégration émet l'événement HA object_monitor_event pour vos automatisations.",
+        "description": "Mettez à jour les labels Home Assistant qui contrôlent la surveillance, les objets et les catégories d'événements. Utilisez security_system pour les centrales d'alarme et state_monitor pour les états on/off. L'intégration émet des événements HA dédiés pour vos automatisations.",
         "data": {
           "monitoring_label": "Label qui active la surveillance",
           "monitoring_timeout": "Timeout par défaut",
@@ -107,6 +107,13 @@
       "on_state_values_required": "Au moins un état ON est requis.",
       "off_state_values_required": "Au moins un état OFF est requis.",
       "on_off_state_overlap": "Les états ON et OFF ne peuvent pas se chevaucher."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "object_availability_problem": {
+        "name": "{object} problème de disponibilité"
+      }
     }
   },
   "selector": {},

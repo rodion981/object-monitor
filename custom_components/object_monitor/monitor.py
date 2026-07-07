@@ -14,7 +14,6 @@ from homeassistant.helpers import entity_registry as er
 
 from .const import (
     EVENT_ENTITY_REGISTRY_UPDATED,
-    EVENT_OBJECT_MONITOR,
     STATE_UNAVAILABLE,
 )
 from .entity_tracker import EntityTracker
@@ -94,7 +93,7 @@ class ObjectMonitor:
     @callback
     def async_fire_monitor_event(self, event: NotificationEvent) -> None:
         """Publish an Object Monitor event on the Home Assistant event bus."""
-        self._hass.bus.async_fire(EVENT_OBJECT_MONITOR, event.as_event_data())
+        self._hass.bus.async_fire(event.ha_event_type, event.as_event_data())
 
     @callback
     def _handle_state_changed_event(self, event: Event) -> None:

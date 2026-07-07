@@ -13,16 +13,15 @@ The integration is event-driven and uses Home Assistant labels. Label roles are 
 - Security systems can be monitored with the `security_system` label.
 - On/off state changes can be monitored with the `state_monitor` label.
 
-The integration does not call notification scripts directly. It emits
-`object_monitor_event`, and your Home Assistant automations decide how to notify
-people.
+The integration does not call notification scripts directly. It emits dedicated
+Home Assistant events, and your automations decide how to notify people.
 
-Supported event types:
+Supported Home Assistant events:
 
-- `offline`
-- `recovery`
-- `security_state`
-- `on_off_state`
+- `object_monitor_offline`
+- `object_monitor_recovery`
+- `object_monitor_security_state`
+- `object_monitor_on_off_state`
 
 ## Installation with HACS
 
@@ -81,7 +80,7 @@ Automation trigger:
 ```yaml
 triggers:
   - trigger: event
-    event_type: object_monitor_event
+    event_type: object_monitor_offline
 ```
 
 Then assign labels to monitored entities.
@@ -111,6 +110,39 @@ timeout_1h
 
 Use only one timeout label per entity. If no timeout label is present, Object Event Monitor uses the default timeout from the integration options.
 
+## Object Availability Problem Sensors
+
+For every configured object label, Object Event Monitor creates a problem
+binary sensor.
+
+Example:
+
+```text
+binary_sensor.home_availability_problem
+binary_sensor.restaurant_availability_problem
+```
+
+The sensor uses Home Assistant's `problem` device class:
+
+- `off` means the object has no confirmed availability problem.
+- `on` means at least one availability-monitored entity for that object is confirmed offline.
+
+Only availability incidents are counted. Security states and on/off state
+monitoring do not affect these aggregate sensors.
+
+Useful attributes:
+
+```yaml
+object_label: home
+object_name: Home
+monitored_count: 12
+offline_count: 1
+pending_count: 0
+offline_entities:
+  - sensor.home_router
+pending_entities: []
+```
+
 ## Security System Monitoring
 
 To monitor an alarm panel, add these labels to an `alarm_control_panel` entity:
@@ -122,8 +154,7 @@ home
 
 `home` must be one of the configured object labels.
 
-Security state changes emit the same `object_monitor_event` event as
-availability monitoring, with `event_type: security_state`.
+Security state changes emit `object_monitor_security_state`.
 
 Supported states include `disarmed`, `armed_home`, `armed_away`, `armed_night`, `armed_vacation`, `arming`, `pending`, `triggered`, `unknown`, and `unavailable`.
 
@@ -144,13 +175,15 @@ the configured category labels if you use the provided automation package with
 On/off monitoring emits:
 
 ```yaml
-event_type: on_off_state
-entity_id: binary_sensor.home_power
-friendly_name: Main Power
-object_label: home
-category: power
-previous_state: off
-state: on
+event_type: object_monitor_on_off_state
+event_data:
+  event_type: on_off_state
+  entity_id: binary_sensor.home_power
+  friendly_name: Main Power
+  object_label: home
+  category: power
+  previous_state: off
+  state: on
 ```
 
 If an entity uses custom state values, configure them in the integration
@@ -178,4 +211,4 @@ The integration provides:
 - `object_monitor.clear_entity_state`
 
 Use `object_monitor.send_test_notification` from Developer Tools to emit a test
-`object_monitor_event` before testing real unavailable entities.
+availability event before testing real unavailable entities.

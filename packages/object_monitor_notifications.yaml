@@ -1,15 +1,14 @@
 automation:
   - id: object_monitor_availability_notifications
-    alias: Object Monitor - Availability Notifications
+    alias: Object Event Monitor - Availability Notifications
     mode: queued
     max: 50
     triggers:
       - trigger: event
-        event_type: object_monitor_event
+        event_type: object_monitor_offline
+      - trigger: event
+        event_type: object_monitor_recovery
     conditions:
-      - condition: template
-        value_template: >
-          {{ trigger.event.data.event_type in ['offline', 'recovery'] }}
       - condition: template
         value_template: >
           {{ trigger.event.data.object_label | default('', true) | length > 0 }}
@@ -39,16 +38,13 @@ automation:
           message: "{{ message }}"
 
   - id: object_monitor_security_notifications
-    alias: Object Monitor - Security Notifications
+    alias: Object Event Monitor - Security Notifications
     mode: queued
     max: 50
     triggers:
       - trigger: event
-        event_type: object_monitor_event
+        event_type: object_monitor_security_state
     conditions:
-      - condition: template
-        value_template: >
-          {{ trigger.event.data.event_type == 'security_state' }}
       - condition: template
         value_template: >
           {{ trigger.event.data.object_label | default('', true) | length > 0 }}
@@ -137,16 +133,13 @@ automation:
           message: "{{ message }}"
 
   - id: object_monitor_on_off_notifications
-    alias: Object Monitor - On/Off Notifications
+    alias: Object Event Monitor - On/Off Notifications
     mode: queued
     max: 50
     triggers:
       - trigger: event
-        event_type: object_monitor_event
+        event_type: object_monitor_on_off_state
     conditions:
-      - condition: template
-        value_template: >
-          {{ trigger.event.data.event_type == 'on_off_state' }}
       - condition: template
         value_template: >
           {{ trigger.event.data.object_label | default('', true) | length > 0 }}

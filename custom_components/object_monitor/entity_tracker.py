@@ -25,6 +25,7 @@ _LOGGER = logging.getLogger(__name__)
 
 IsUnavailableCallback = Callable[[str], bool]
 EventCallback = Callable[[NotificationEvent], None]
+StatusCallback = Callable[[], None]
 
 
 class EntityTracker:
@@ -38,6 +39,7 @@ class EntityTracker:
         notification_manager: NotificationManager,
         is_unavailable: IsUnavailableCallback,
         event_callback: EventCallback | None = None,
+        status_callback: StatusCallback | None = None,
     ) -> None:
         """Initialize the entity tracker."""
         self._hass = hass
@@ -46,6 +48,7 @@ class EntityTracker:
         self._notification_manager = notification_manager
         self._is_unavailable = is_unavailable
         self._event_callback = event_callback
+        self._status_callback = status_callback
         self._entities: dict[str, MonitoredEntity] = {}
         self._timers: dict[str, CALLBACK_TYPE] = {}
 
@@ -68,6 +71,10 @@ class EntityTracker:
         """Set the callback used to publish monitor events."""
         self._event_callback = event_callback
 
+    def set_status_callback(self, status_callback: StatusCallback | None) -> None:
+        """Set the callback used to publish aggregate status updates."""
+        self._status_callback = status_callback
+
     async def async_restore(self, state: StoredMonitorState) -> None:
         """Restore tracker state after Home Assistant restart."""
         for stored_entity in state.entities.values():
@@ -79,6 +86,8 @@ class EntityTracker:
                     entity.entity_id,
                     self._remaining_timeout(entity),
                 )
+
+        self._emit_status_update()
 
     async def async_mark_unavailable(
         self,
@@ -118,6 +127,7 @@ class EntityTracker:
 
         if entity.is_offline:
             await self._store.async_save_entity(entity)
+            self._emit_status_update()
             return
 
         timeout_changed = (
@@ -128,6 +138,7 @@ class EntityTracker:
             self._schedule_timer(labels.entity_id, self._remaining_timeout(entity))
 
         await self._store.async_save_entity(entity)
+        self._emit_status_update()
 
     async def async_mark_available(self, entity_id: str) -> None:
         """Mark an entity as available and send recovery if needed."""
@@ -136,6 +147,7 @@ class EntityTracker:
 
         if entity is None:
             await self._store.async_remove_entity(entity_id)
+            self._emit_status_update()
             return
 
         if entity.notified_offline:
@@ -153,12 +165,14 @@ class EntityTracker:
             await self._notification_manager.async_notify(event)
 
         await self._store.async_remove_entity(entity_id)
+        self._emit_status_update()
 
     async def async_remove_entity(self, entity_id: str) -> None:
         """Stop tracking one entity and remove its persisted state."""
         self._cancel_timer(entity_id)
         self._entities.pop(entity_id, None)
         await self._store.async_remove_entity(entity_id)
+        self._emit_status_update()
 
     async def async_prune_except(self, active_entity_ids: Iterable[str]) -> None:
         """Remove tracked entities that are no longer monitor candidates."""
@@ -172,6 +186,7 @@ class EntityTracker:
             self._entities.pop(entity_id, None)
 
         await self._store.async_prune_except(active)
+        self._emit_status_update()
 
     async def async_shutdown(self) -> None:
         """Cancel all pending timers."""
@@ -207,6 +222,7 @@ class EntityTracker:
         if not self._is_unavailable(entity_id):
             self._entities.pop(entity_id, None)
             await self._store.async_remove_entity(entity_id)
+            self._emit_status_update()
             return
 
         entity.offline_confirmed = True
@@ -230,6 +246,7 @@ class EntityTracker:
             entity.last_notified_at = event.notified_at
 
         await self._store.async_save_entity(entity)
+        self._emit_status_update()
 
     def _remaining_timeout(self, entity: MonitoredEntity) -> float:
         """Calculate remaining timeout seconds for restored pending state."""
@@ -243,6 +260,11 @@ class EntityTracker:
         """Emit an optional callback event to the monitor/runtime layer."""
         if self._event_callback is not None:
             self._event_callback(event)
+
+    def _emit_status_update(self) -> None:
+        """Emit an optional callback when aggregate availability state changed."""
+        if self._status_callback is not None:
+            self._status_callback()
 
 
 def _stored_to_monitored_entity(stored: StoredEntityState) -> MonitoredEntity:

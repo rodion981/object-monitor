@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Налаштування Object Event Monitor",
-        "description": "Вкажіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охорони використовуйте security_system, для on/off станів - state_monitor. Інтеграція генерує HA event object_monitor_event для ваших automations.",
+        "description": "Вкажіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охорони використовуйте security_system, для on/off станів - state_monitor. Інтеграція генерує окремі події Home Assistant для ваших автоматизацій.",
         "data": {
           "monitoring_label": "Label, який вмикає моніторинг",
           "monitoring_timeout": "Таймаут за замовчуванням",
@@ -18,14 +18,14 @@
           "debug_logging": "Debug-логування"
         },
         "data_description": {
-          "monitoring_label": "Цей label треба додати на кожну entity, яку Object Event Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
-          "object_labels": "Список labels, які означають об'єкт або місце. Entity має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
+          "monitoring_label": "Цей label треба додати на кожну сутність, яку Object Event Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
+          "object_labels": "Список labels, які означають об'єкт або місце. Сутність має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
           "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
-          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для package-маршруту script.tg_<object>_<category> category label потрібен.",
+          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для маршруту package script.tg_<object>_<category> потрібен label категорії.",
           "category_names": "Як показувати категорії в подіях. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
-          "on_state_values": "Стани entity, які state_monitor має вважати ON. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: on.",
-          "off_state_values": "Стани entity, які state_monitor має вважати OFF. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: off.",
-          "monitoring_timeout": "Базовий таймаут для всіх entity. Для конкретної entity можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
+          "on_state_values": "Стани сутності, які state_monitor має вважати ON. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: on.",
+          "off_state_values": "Стани сутності, які state_monitor має вважати OFF. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: off.",
+          "monitoring_timeout": "Базовий таймаут для всіх сутностей. Для конкретної сутності можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
           "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
         }
@@ -60,7 +60,7 @@
     "step": {
       "init": {
         "title": "Опції Object Event Monitor",
-        "description": "Оновіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охорони використовуйте security_system, для on/off станів - state_monitor. Інтеграція генерує HA event object_monitor_event для ваших automations.",
+        "description": "Оновіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охорони використовуйте security_system, для on/off станів - state_monitor. Інтеграція генерує окремі події Home Assistant для ваших автоматизацій.",
         "data": {
           "monitoring_label": "Label, який вмикає моніторинг",
           "monitoring_timeout": "Таймаут за замовчуванням",
@@ -74,14 +74,14 @@
           "debug_logging": "Debug-логування"
         },
         "data_description": {
-          "monitoring_label": "Цей label треба додати на кожну entity, яку Object Event Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
-          "object_labels": "Список labels, які означають об'єкт або місце. Entity має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
+          "monitoring_label": "Цей label треба додати на кожну сутність, яку Object Event Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
+          "object_labels": "Список labels, які означають об'єкт або місце. Сутність має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
           "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
-          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для package-маршруту script.tg_<object>_<category> category label потрібен.",
+          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для маршруту package script.tg_<object>_<category> потрібен label категорії.",
           "category_names": "Як показувати категорії в подіях. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
-          "on_state_values": "Стани entity, які state_monitor має вважати ON. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: on.",
-          "off_state_values": "Стани entity, які state_monitor має вважати OFF. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: off.",
-          "monitoring_timeout": "Базовий таймаут для всіх entity. Для конкретної entity можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
+          "on_state_values": "Стани сутності, які state_monitor має вважати ON. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: on.",
+          "off_state_values": "Стани сутності, які state_monitor має вважати OFF. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: off.",
+          "monitoring_timeout": "Базовий таймаут для всіх сутностей. Для конкретної сутності можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
           "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
         }
@@ -107,6 +107,13 @@
       "on_state_values_required": "Потрібен хоча б один ON-стан.",
       "off_state_values_required": "Потрібен хоча б один OFF-стан.",
       "on_off_state_overlap": "ON-стани та OFF-стани не можуть перетинатися."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "object_availability_problem": {
+        "name": "{object}: проблема доступності"
+      }
     }
   },
   "selector": {},

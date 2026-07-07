@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Set up Object Event Monitor",
-        "description": "Choose which Home Assistant labels control monitoring, objects, and event categories. Use security_system for alarm panels and state_monitor for on/off states. The integration emits the object_monitor_event HA event for your automations.",
+        "description": "Choose which Home Assistant labels control monitoring, objects, and event categories. Use security_system for alarm panels and state_monitor for on/off states. The integration emits dedicated HA events for your automations.",
         "data": {
           "monitoring_label": "Label that enables monitoring",
           "monitoring_timeout": "Default timeout",
@@ -60,7 +60,7 @@
     "step": {
       "init": {
         "title": "Object Event Monitor options",
-        "description": "Update which Home Assistant labels control monitoring, objects, and event categories. Use security_system for alarm panels and state_monitor for on/off states. The integration emits the object_monitor_event HA event for your automations.",
+        "description": "Update which Home Assistant labels control monitoring, objects, and event categories. Use security_system for alarm panels and state_monitor for on/off states. The integration emits dedicated HA events for your automations.",
         "data": {
           "monitoring_label": "Label that enables monitoring",
           "monitoring_timeout": "Default timeout",
@@ -107,6 +107,13 @@
       "on_state_values_required": "At least one ON state value is required.",
       "off_state_values_required": "At least one OFF state value is required.",
       "on_off_state_overlap": "ON and OFF state values cannot overlap."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "object_availability_problem": {
+        "name": "{object} availability problem"
+      }
     }
   },
   "selector": {},

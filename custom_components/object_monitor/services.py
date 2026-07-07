@@ -34,7 +34,10 @@ SEND_TEST_NOTIFICATION_SCHEMA = vol.Schema(
             [EVENT_TYPE_OFFLINE, EVENT_TYPE_RECOVERY]
         ),
         vol.Optional(ATTR_ENTITY_ID, default="sensor.object_monitor_test"): cv.string,
-        vol.Optional(ATTR_FRIENDLY_NAME, default="Тест Object Monitor"): cv.string,
+        vol.Optional(
+            ATTR_FRIENDLY_NAME,
+            default="Test Object Event Monitor",
+        ): cv.string,
     }
 )
 
@@ -73,7 +76,7 @@ async def async_unload_services(hass: HomeAssistant) -> None:
 
 
 async def _handle_send_test_notification(call: ServiceCall) -> None:
-    """Handle a request to send a test notification."""
+    """Handle a request to emit a test availability event."""
     runtime = _get_runtime(call.hass)
     object_label = call.data[ATTR_OBJECT_LABEL].strip().lower()
     raw_category = call.data.get(ATTR_CATEGORY)
@@ -103,7 +106,7 @@ async def _handle_send_test_notification(call: ServiceCall) -> None:
 
     if not result.success:
         raise HomeAssistantError(
-            f"Test notification was not delivered: {result.reason or 'unknown'}"
+            f"Test event was not emitted: {result.reason or 'unknown'}"
         )
 
 

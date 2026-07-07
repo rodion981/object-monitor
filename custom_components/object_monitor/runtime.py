@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from datetime import datetime, timezone
 import logging
-from typing import Any
+from typing import Any, Callable
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -28,7 +28,6 @@ from .const import (
     DEFAULT_OFF_STATE_VALUES,
     DEFAULT_ON_STATE_VALUES,
     DEFAULT_TIMEOUT_SECONDS,
-    EVENT_OBJECT_MONITOR,
 )
 from .entity_tracker import EntityTracker
 from .label_resolver import LabelResolver
@@ -62,6 +61,7 @@ class ObjectMonitorRuntime:
         self.monitor: ObjectMonitor | None = None
         self.security_monitor: SecurityMonitor | None = None
         self.on_off_monitor: OnOffMonitor | None = None
+        self._object_status_listeners: list[Callable[[], None]] = []
 
     async def async_start(self) -> None:
         """Start all Object Monitor runtime components."""
@@ -89,7 +89,8 @@ class ObjectMonitorRuntime:
             self.tracker,
         )
         monitor_ref = self.monitor
-        self.tracker.set_event_callback(self.monitor.async_fire_monitor_event)
+        self.tracker.set_event_callback(self._async_fire_availability_event)
+        self.tracker.set_status_callback(self.async_notify_object_status_updated)
 
         await self.monitor.async_start()
         self.security_monitor = SecurityMonitor(
@@ -104,6 +105,7 @@ class ObjectMonitorRuntime:
             self.notification_manager,
         )
         await self.on_off_monitor.async_start()
+        self.async_notify_object_status_updated()
         _LOGGER.debug("Object Monitor runtime started")
 
     async def async_stop(self) -> None:
@@ -124,7 +126,32 @@ class ObjectMonitorRuntime:
             await self.tracker.async_shutdown()
             self.tracker = None
 
+        self._object_status_listeners.clear()
+
         _LOGGER.debug("Object Monitor runtime stopped")
+
+    def async_add_object_status_listener(
+        self,
+        update_callback: Callable[[], None],
+    ) -> Callable[[], None]:
+        """Register a callback for object availability aggregate updates."""
+        self._object_status_listeners.append(update_callback)
+
+        def _unsubscribe() -> None:
+            if update_callback in self._object_status_listeners:
+                self._object_status_listeners.remove(update_callback)
+
+        return _unsubscribe
+
+    def async_notify_object_status_updated(self) -> None:
+        """Notify object status entities that availability aggregates changed."""
+        for update_callback in tuple(self._object_status_listeners):
+            update_callback()
+
+    def _async_fire_availability_event(self, event: NotificationEvent) -> None:
+        """Publish an availability event."""
+        if self.monitor is not None:
+            self.monitor.async_fire_monitor_event(event)
 
     async def async_reload_monitored_entities(self) -> None:
         """Reconcile monitored entities from current registry and state."""
@@ -134,14 +161,17 @@ class ObjectMonitorRuntime:
             await self.security_monitor.async_reconcile()
         if self.on_off_monitor is not None:
             await self.on_off_monitor.async_reconcile()
+        self.async_notify_object_status_updated()
 
     async def async_clear_entity_state(self, entity_id: str) -> None:
         """Clear stored and in-memory monitor state for one entity."""
         if self.tracker is not None:
             await self.tracker.async_remove_entity(entity_id)
+            self.async_notify_object_status_updated()
             return
 
         await self.store.async_remove_entity(entity_id)
+        self.async_notify_object_status_updated()
 
     async def async_send_test_notification(
         self,
@@ -151,7 +181,7 @@ class ObjectMonitorRuntime:
         entity_id: str,
         friendly_name: str,
     ) -> NotificationResult:
-        """Send a test notification through the configured provider."""
+        """Emit a test availability event."""
         event = NotificationEvent(
             event_type=event_type,
             entity_id=entity_id,
@@ -161,7 +191,7 @@ class ObjectMonitorRuntime:
             notified_at=datetime.now(timezone.utc),
             timeout_seconds=self.config.monitoring_timeout,
         )
-        self.hass.bus.async_fire(EVENT_OBJECT_MONITOR, event.as_event_data())
+        self.hass.bus.async_fire(event.ha_event_type, event.as_event_data())
         return await self.notification_manager.async_notify(event)
 
     def diagnostics(self) -> dict[str, Any]:

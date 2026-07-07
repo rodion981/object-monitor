@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Object Event Monitor einrichten",
-        "description": "Wähle aus, welche Home-Assistant-Labels die Überwachung, Objekte und Ereigniskategorien steuern. Verwende security_system für Alarmzentralen und state_monitor für Ein/Aus-Zustände. Die Integration erzeugt das HA-Event object_monitor_event für deine Automationen.",
+        "description": "Wähle aus, welche Home-Assistant-Labels die Überwachung, Objekte und Ereigniskategorien steuern. Verwende security_system für Alarmzentralen und state_monitor für Ein/Aus-Zustände. Die Integration erzeugt dedizierte HA-Events für deine Automationen.",
         "data": {
           "monitoring_label": "Label, das die Überwachung aktiviert",
           "monitoring_timeout": "Standard-Timeout",
@@ -60,7 +60,7 @@
     "step": {
       "init": {
         "title": "Object Event Monitor Optionen",
-        "description": "Aktualisiere, welche Home-Assistant-Labels die Überwachung, Objekte und Ereigniskategorien steuern. Verwende security_system für Alarmzentralen und state_monitor für Ein/Aus-Zustände. Die Integration erzeugt das HA-Event object_monitor_event für deine Automationen.",
+        "description": "Aktualisiere, welche Home-Assistant-Labels die Überwachung, Objekte und Ereigniskategorien steuern. Verwende security_system für Alarmzentralen und state_monitor für Ein/Aus-Zustände. Die Integration erzeugt dedizierte HA-Events für deine Automationen.",
         "data": {
           "monitoring_label": "Label, das die Überwachung aktiviert",
           "monitoring_timeout": "Standard-Timeout",
@@ -107,6 +107,13 @@
       "on_state_values_required": "Mindestens ein ON-Zustand ist erforderlich.",
       "off_state_values_required": "Mindestens ein OFF-Zustand ist erforderlich.",
       "on_off_state_overlap": "ON- und OFF-Zustände dürfen sich nicht überschneiden."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "object_availability_problem": {
+        "name": "{object}: Verfügbarkeitsproblem"
+      }
     }
   },
   "selector": {},

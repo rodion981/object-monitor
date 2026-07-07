@@ -373,23 +373,16 @@ def _normalize_state_values(
 
 
 def _normalize_label_names(value: Any) -> tuple[dict[str, str], str | None]:
-    """Normalize label display name input from key=value lines."""
+    """Normalize label display name input from key=value pairs."""
     if value is None:
         return {}, None
 
     if isinstance(value, Mapping):
         raw_items = value.items()
     else:
-        raw_items = []
-        for line in str(value).splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            separator = "=" if "=" in line else ":" if ":" in line else None
-            if separator is None:
-                return {}, "invalid_label_name_mapping"
-            key, display_name = line.split(separator, 1)
-            raw_items.append((key, display_name))
+        raw_items, error = _parse_label_name_pairs(str(value))
+        if error:
+            return {}, error
 
     names: dict[str, str] = {}
     for raw_key, raw_display_name in raw_items:
@@ -402,6 +395,36 @@ def _normalize_label_names(value: Any) -> tuple[dict[str, str], str | None]:
         names[key] = display_name
 
     return names, None
+
+
+def _parse_label_name_pairs(value: str) -> tuple[list[tuple[str, str]], str | None]:
+    """Parse label display names separated by newlines, commas, or semicolons."""
+    text = value.strip()
+    if not text:
+        return [], None
+
+    matches = list(
+        re.finditer(
+            r"(?:^|[\n,;])\s*([a-zA-Z0-9_]+)\s*([=:])",
+            text,
+        )
+    )
+    if not matches:
+        return [], "invalid_label_name_mapping"
+
+    if text[: matches[0].start()].strip(" \t\r\n,;"):
+        return [], "invalid_label_name_mapping"
+
+    raw_items: list[tuple[str, str]] = []
+    for index, match in enumerate(matches):
+        value_start = match.end()
+        value_end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        display_name = text[value_start:value_end].strip(" \t\r\n,;")
+        if not display_name:
+            return [], "invalid_label_name_mapping"
+        raw_items.append((match.group(1), display_name))
+
+    return raw_items, None
 
 
 def _label_names_for_form(value: Any) -> str:

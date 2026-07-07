@@ -67,6 +67,12 @@ restaurant=Restaurant
 cafe=Cafe
 ```
 
+You can also put them on one line:
+
+```text
+home=Home, restaurant=Restaurant, cafe=Cafe
+```
+
 And category display names:
 
 ```text
@@ -74,6 +80,8 @@ security=Security
 power=Power
 internet=Internet
 ```
+
+Category display names also support comma-separated entries.
 
 Automation trigger:
 

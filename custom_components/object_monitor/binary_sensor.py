@@ -45,6 +45,7 @@ class ObjectProblemBinarySensor(BinarySensorEntity):
         self._attr_unique_id = (
             f"{entry.entry_id}_{object_label}_availability_problem"
         )
+        self._attr_suggested_object_id = f"{object_label}_availability_problem"
         self._attr_translation_key = "object_availability_problem"
         self._attr_has_entity_name = True
         self._attr_translation_placeholders = {

@@ -12,6 +12,7 @@ models_module = import_object_monitor_module("models")
 MonitorConfig = models_module.MonitorConfig
 MonitoredEntity = models_module.MonitoredEntity
 NotificationEventType = models_module.NotificationEventType
+OnOffStateEvent = models_module.OnOffStateEvent
 SecurityStateEvent = models_module.SecurityStateEvent
 SecuritySystemState = models_module.SecuritySystemState
 StoredEntityState = models_module.StoredEntityState
@@ -60,6 +61,30 @@ class TestStoredModels(unittest.TestCase):
         self.assertEqual(data["category"], "security")
         self.assertEqual(data["previous_state"], "armed_away")
         self.assertEqual(data["state"], "triggered")
+        self.assertEqual(data["notified_at"], notified_at.isoformat())
+
+    def test_on_off_state_event_serializes_for_event_bus(self) -> None:
+        """On/off state events expose provider-neutral event data."""
+        notified_at = datetime(2026, 7, 7, 9, 30, tzinfo=timezone.utc)
+        event = OnOffStateEvent(
+            entity_id="binary_sensor.home_power",
+            friendly_name="Main Power",
+            object_label="home",
+            category="power",
+            previous_state="off",
+            state="on",
+            notified_at=notified_at,
+        )
+
+        data = event.as_event_data()
+
+        self.assertEqual(data["event_type"], "on_off_state")
+        self.assertEqual(data["entity_id"], "binary_sensor.home_power")
+        self.assertEqual(data["friendly_name"], "Main Power")
+        self.assertEqual(data["object_label"], "home")
+        self.assertEqual(data["category"], "power")
+        self.assertEqual(data["previous_state"], "off")
+        self.assertEqual(data["state"], "on")
         self.assertEqual(data["notified_at"], notified_at.isoformat())
 
     def test_stored_entity_round_trip(self) -> None:

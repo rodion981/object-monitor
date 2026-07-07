@@ -1,0 +1,177 @@
+automation:
+  - id: object_monitor_availability_notifications
+    alias: Object Monitor - Availability Notifications
+    mode: queued
+    max: 50
+    triggers:
+      - trigger: event
+        event_type: object_monitor_event
+    conditions:
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.event_type in ['offline', 'recovery'] }}
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.object_label | default('', true) | length > 0 }}
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.category | default('', true) | length > 0 }}
+    actions:
+      - variables:
+          event_type: "{{ trigger.event.data.event_type }}"
+          object_label: "{{ trigger.event.data.object_label }}"
+          category: "{{ trigger.event.data.category }}"
+          entity_id: "{{ trigger.event.data.entity_id }}"
+          friendly_name: "{{ trigger.event.data.friendly_name | default(entity_id, true) }}"
+          target_script: "script.tg_{{ object_label }}_{{ category }}"
+          message: >
+            {% if event_type == 'offline' %}
+            🔴 {{ friendly_name }} недоступний
+
+            Сутність: {{ entity_id }}
+            {% else %}
+            🟢 {{ friendly_name }} відновлено
+
+            Сутність: {{ entity_id }}
+            {% endif %}
+      - action: "{{ target_script }}"
+        data:
+          message: "{{ message }}"
+
+  - id: object_monitor_security_notifications
+    alias: Object Monitor - Security Notifications
+    mode: queued
+    max: 50
+    triggers:
+      - trigger: event
+        event_type: object_monitor_event
+    conditions:
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.event_type == 'security_state' }}
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.object_label | default('', true) | length > 0 }}
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.category | default('', true) | length > 0 }}
+    actions:
+      - variables:
+          object_label: "{{ trigger.event.data.object_label }}"
+          category: "{{ trigger.event.data.category }}"
+          entity_id: "{{ trigger.event.data.entity_id }}"
+          friendly_name: "{{ trigger.event.data.friendly_name | default(entity_id, true) }}"
+          previous_state: "{{ trigger.event.data.previous_state | default('', true) }}"
+          state: "{{ trigger.event.data.state }}"
+          target_script: "script.tg_{{ object_label }}_{{ category }}"
+          title: >
+            {% if state == 'disarmed' %}
+            🔓 Систему охорони знято
+            {% elif state == 'armed_home' %}
+            🏠 Увімкнено режим вдома
+            {% elif state == 'armed_away' %}
+            🛡 Систему охорони увімкнено
+            {% elif state == 'armed_night' %}
+            🌙 Увімкнено нічний режим
+            {% elif state == 'armed_vacation' %}
+            🛡 Увімкнено режим відпустки
+            {% elif state == 'arming' %}
+            ⏳ Система охорони вмикається
+            {% elif state == 'pending' %}
+            ⚠ Почалась затримка входу/виходу
+            {% elif state == 'triggered' %}
+            🚨 ТРИВОГА ОХОРОНИ
+            {% elif state == 'unavailable' %}
+            🔴 Система охорони недоступна
+            {% elif previous_state == 'unavailable' %}
+            🟢 Зв'язок із системою охорони відновлено
+            {% else %}
+            ⚠ Стан системи охорони змінився
+            {% endif %}
+          state_name: >
+            {% if state == 'disarmed' %}
+            Знято з охорони
+            {% elif state in ['armed_home', 'armed_away', 'armed_night', 'armed_vacation'] %}
+            Під охороною
+            {% elif state == 'arming' %}
+            Вмикається
+            {% elif state == 'pending' %}
+            Затримка
+            {% elif state == 'triggered' %}
+            Тривога
+            {% elif state == 'unavailable' %}
+            Недоступна
+            {% elif state == 'unknown' %}
+            Невідомо
+            {% else %}
+            {{ state }}
+            {% endif %}
+          mode_name: >
+            {% if state == 'armed_home' %}
+            Вдома
+            {% elif state == 'armed_away' %}
+            Немає вдома
+            {% elif state == 'armed_night' %}
+            Ніч
+            {% elif state == 'armed_vacation' %}
+            Відпустка
+            {% else %}
+            {% endif %}
+          message: >
+            {{ title | trim }}
+
+            Система: {{ friendly_name }}
+
+            {% if mode_name | trim %}
+            Режим: {{ mode_name | trim }}
+
+            {% endif %}
+            Стан: {{ state_name | trim }}
+            Сутність: {{ entity_id }}
+            {% if state == 'triggered' %}
+
+            Високий пріоритет.
+            {% endif %}
+      - action: "{{ target_script }}"
+        data:
+          message: "{{ message }}"
+
+  - id: object_monitor_on_off_notifications
+    alias: Object Monitor - On/Off Notifications
+    mode: queued
+    max: 50
+    triggers:
+      - trigger: event
+        event_type: object_monitor_event
+    conditions:
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.event_type == 'on_off_state' }}
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.object_label | default('', true) | length > 0 }}
+      - condition: template
+        value_template: >
+          {{ trigger.event.data.category | default('', true) | length > 0 }}
+    actions:
+      - variables:
+          object_label: "{{ trigger.event.data.object_label }}"
+          category: "{{ trigger.event.data.category }}"
+          entity_id: "{{ trigger.event.data.entity_id }}"
+          friendly_name: "{{ trigger.event.data.friendly_name | default(entity_id, true) }}"
+          previous_state: "{{ trigger.event.data.previous_state }}"
+          state: "{{ trigger.event.data.state }}"
+          target_script: "script.tg_{{ object_label }}_{{ category }}"
+          message: >
+            {% if state == 'on' %}
+            🟢 {{ friendly_name }} увімкнено
+            {% else %}
+            ⚫ {{ friendly_name }} вимкнено
+            {% endif %}
+
+            Попередній стан: {{ previous_state }}
+            Поточний стан: {{ state }}
+            Сутність: {{ entity_id }}
+      - action: "{{ target_script }}"
+        data:
+          message: "{{ message }}"

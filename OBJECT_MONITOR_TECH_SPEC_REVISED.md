@@ -16,6 +16,7 @@ Object Monitor is responsible for:
 - detecting entity availability incidents
 - tracking per-entity unavailable timeout state
 - detecting security system state changes
+- detecting selected on/off state changes
 - emitting normalized Home Assistant events
 - preserving availability incident context across Home Assistant restarts
 
@@ -68,6 +69,18 @@ object_label: home
 category: security
 previous_state: disarmed
 state: armed_away
+```
+
+On/off state events use:
+
+```yaml
+event_type: on_off_state
+entity_id: binary_sensor.home_power
+friendly_name: Main Power
+object_label: home
+category: power
+previous_state: off
+state: on
 ```
 
 ## 4. Label Model
@@ -178,7 +191,36 @@ Security monitoring emits `event_type: security_state` when the state actually c
 
 On startup, the current state is treated as the baseline and does not emit a notification event. If the first observed state change includes an `old_state`, Object Monitor emits the event using that previous state.
 
-## 8. Automation Routing
+## 8. On/Off State Monitoring
+
+On/off state monitoring is independent from availability and security monitoring.
+
+Entities are selected by labels:
+
+```text
+state_monitor
+<one object label>
+<optional category label>
+```
+
+Supported states:
+
+- `on`
+- `off`
+
+On startup, the current state is treated as the baseline and does not emit an event.
+
+When a selected entity changes from `off` to `on` or from `on` to `off`, Object Monitor emits:
+
+```yaml
+event_type: on_off_state
+previous_state: off
+state: on
+```
+
+This feature is intended for binary sensors, switches, input booleans, and other Home Assistant entities that expose normal `on` / `off` states.
+
+## 9. Automation Routing
 
 Notification delivery should be implemented in Home Assistant automations.
 
@@ -215,7 +257,7 @@ target_script: >
 
 This routing belongs to the user automation layer, not the integration.
 
-## 9. Services
+## 10. Services
 
 The integration provides:
 
@@ -225,7 +267,7 @@ The integration provides:
 
 `send_test_notification` is kept for backward compatibility with earlier releases. It now emits a test `object_monitor_event` instead of sending a direct notification.
 
-## 10. Architecture
+## 11. Architecture
 
 Main modules:
 
@@ -234,12 +276,13 @@ Main modules:
 - `monitor.py` watches availability-related state changes
 - `entity_tracker.py` tracks pending/offline availability incidents
 - `security_monitor.py` watches security system state changes
+- `on_off_monitor.py` watches selected on/off state changes
 - `storage.py` persists availability incident state
 - `notification_manager.py` acknowledges emitted events without external delivery
 - `runtime.py` composes runtime services and monitors
 - `services.py` exposes Home Assistant services
 
-## 11. Compatibility
+## 12. Compatibility
 
 The integration is designed for Home Assistant custom integration deployment through HACS.
 

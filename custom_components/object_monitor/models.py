@@ -13,6 +13,7 @@ from .const import (
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
     DEFAULT_MONITORING_LABEL,
     DEFAULT_TIMEOUT_SECONDS,
+    EVENT_TYPE_ON_OFF_STATE,
     EVENT_TYPE_SECURITY_STATE,
 )
 
@@ -184,7 +185,33 @@ class SecurityStateEvent:
         }
 
 
-MonitorNotificationEvent = NotificationEvent | SecurityStateEvent
+@dataclass(slots=True, frozen=True)
+class OnOffStateEvent:
+    """Provider-neutral event emitted by on/off state monitoring."""
+
+    entity_id: str
+    friendly_name: str
+    object_label: str
+    category: str | None
+    previous_state: str
+    state: str
+    notified_at: datetime | None = None
+
+    def as_event_data(self) -> dict[str, Any]:
+        """Return serializable data suitable for the Home Assistant event bus."""
+        return {
+            "event_type": EVENT_TYPE_ON_OFF_STATE,
+            "entity_id": self.entity_id,
+            "friendly_name": self.friendly_name,
+            "object_label": self.object_label,
+            "category": self.category,
+            "previous_state": self.previous_state,
+            "state": self.state,
+            "notified_at": self.notified_at.isoformat() if self.notified_at else None,
+        }
+
+
+MonitorNotificationEvent = NotificationEvent | SecurityStateEvent | OnOffStateEvent
 
 
 @dataclass(slots=True, frozen=True)

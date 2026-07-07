@@ -9,6 +9,7 @@ The integration is event-driven and uses Home Assistant labels. Label roles are 
 - Optional category labels can route automation logic. Defaults: `security`, `light`, `climate`.
 - Optional display names let events show human-friendly object and category names while labels remain stable Latin IDs.
 - Security systems can be monitored with the `security_system` label.
+- On/off state changes can be monitored with the `state_monitor` label.
 
 ## Installation with HACS
 
@@ -116,6 +117,32 @@ Security state changes emit the same `object_monitor_event` event as
 availability monitoring, with `event_type: security_state`.
 
 Supported states include `disarmed`, `armed_home`, `armed_away`, `armed_night`, `armed_vacation`, `arming`, `pending`, `triggered`, `unknown`, and `unavailable`.
+
+## On/Off State Monitoring
+
+To monitor normal `on` / `off` changes, add these labels to an entity:
+
+```text
+state_monitor
+home
+power
+```
+
+`home` must be one of the configured object labels. `power` should be one of
+the configured category labels if you use the provided automation package with
+`script.tg_<object>_<category>` routing.
+
+On/off monitoring emits:
+
+```yaml
+event_type: on_off_state
+entity_id: binary_sensor.home_power
+friendly_name: Main Power
+object_label: home
+category: power
+previous_state: off
+state: on
+```
 
 Version `v0.1.5` is the last release before security system monitoring and can be selected in HACS if you need to roll back.
 

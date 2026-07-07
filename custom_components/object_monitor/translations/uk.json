@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Налаштування Object Monitor",
-        "description": "Вкажіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охоронних подій додайте на alarm_control_panel labels security_system і один label об'єкта. Інтеграція генерує HA event object_monitor_event для ваших automations.",
+        "description": "Вкажіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охорони використовуйте security_system, для on/off станів - state_monitor. Інтеграція генерує HA event object_monitor_event для ваших automations.",
         "data": {
           "monitoring_label": "Label, який вмикає моніторинг",
           "monitoring_timeout": "Таймаут за замовчуванням",
@@ -19,7 +19,7 @@
           "monitoring_label": "Цей label треба додати на кожну entity, яку Object Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
           "object_labels": "Список labels, які означають об'єкт або місце. Entity має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
           "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
-          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Якщо категорії не потрібні, можна залишити порожнім.",
+          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для package-маршруту script.tg_<object>_<category> category label потрібен.",
           "category_names": "Як показувати категорії в подіях. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
           "monitoring_timeout": "Базовий таймаут для всіх entity. Для конкретної entity можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
@@ -53,7 +53,7 @@
     "step": {
       "init": {
         "title": "Опції Object Monitor",
-        "description": "Оновіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охоронних подій додайте на alarm_control_panel labels security_system і один label об'єкта. Інтеграція генерує HA event object_monitor_event для ваших automations.",
+        "description": "Оновіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охорони використовуйте security_system, для on/off станів - state_monitor. Інтеграція генерує HA event object_monitor_event для ваших automations.",
         "data": {
           "monitoring_label": "Label, який вмикає моніторинг",
           "monitoring_timeout": "Таймаут за замовчуванням",
@@ -68,7 +68,7 @@
           "monitoring_label": "Цей label треба додати на кожну entity, яку Object Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
           "object_labels": "Список labels, які означають об'єкт або місце. Entity має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
           "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
-          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Якщо категорії не потрібні, можна залишити порожнім.",
+          "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для package-маршруту script.tg_<object>_<category> category label потрібен.",
           "category_names": "Як показувати категорії в подіях. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
           "monitoring_timeout": "Базовий таймаут для всіх entity. Для конкретної entity можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",

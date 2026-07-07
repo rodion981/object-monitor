@@ -16,6 +16,7 @@ DEFAULT_HEARTBEAT_INTERVAL_SECONDS: Final = 0
 
 DEFAULT_MONITORING_LABEL: Final = "device_monitoring"
 SECURITY_SYSTEM_LABEL: Final = "security_system"
+ON_OFF_MONITOR_LABEL: Final = "state_monitor"
 
 CATEGORY_SECURITY: Final = "security"
 CATEGORY_LIGHT: Final = "light"
@@ -40,6 +41,7 @@ EVENT_ENTITY_REGISTRY_UPDATED: Final = "entity_registry_updated"
 EVENT_TYPE_OFFLINE: Final = "offline"
 EVENT_TYPE_RECOVERY: Final = "recovery"
 EVENT_TYPE_SECURITY_STATE: Final = "security_state"
+EVENT_TYPE_ON_OFF_STATE: Final = "on_off_state"
 
 ALARM_CONTROL_PANEL_DOMAIN: Final = "alarm_control_panel"
 

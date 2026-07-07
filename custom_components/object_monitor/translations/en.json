@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Set up Object Monitor",
-        "description": "Choose which Home Assistant labels control monitoring, objects, and event categories. For security events, add security_system and one object label to an alarm_control_panel. The integration emits the object_monitor_event HA event for your automations.",
+        "description": "Choose which Home Assistant labels control monitoring, objects, and event categories. Use security_system for alarm panels and state_monitor for on/off states. The integration emits the object_monitor_event HA event for your automations.",
         "data": {
           "monitoring_label": "Label that enables monitoring",
           "monitoring_timeout": "Default timeout",
@@ -19,7 +19,7 @@
           "monitoring_label": "Add this label to every entity that Object Monitor should watch. Usually keep device_monitoring.",
           "object_labels": "Labels that mean an object or location. Each monitored entity must have exactly one of these labels. One per line: home, restaurant, cafe.",
           "object_names": "How object labels should appear in events. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
-          "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. Leave empty if categories are not needed.",
+          "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. The script.tg_<object>_<category> package route requires a category label.",
           "category_names": "How category labels should appear in events. The left side must match Category labels. One per line: power=Power, security=Security.",
           "monitoring_timeout": "Fallback timeout used when an entity has no label such as timeout_20s, timeout_7m, or timeout_1h.",
           "heartbeat_interval": "Reserved for future heartbeat support. Set 0 to disable.",
@@ -53,7 +53,7 @@
     "step": {
       "init": {
         "title": "Object Monitor options",
-        "description": "Update which Home Assistant labels control monitoring, objects, and event categories. For security events, add security_system and one object label to an alarm_control_panel. The integration emits the object_monitor_event HA event for your automations.",
+        "description": "Update which Home Assistant labels control monitoring, objects, and event categories. Use security_system for alarm panels and state_monitor for on/off states. The integration emits the object_monitor_event HA event for your automations.",
         "data": {
           "monitoring_label": "Label that enables monitoring",
           "monitoring_timeout": "Default timeout",
@@ -68,7 +68,7 @@
           "monitoring_label": "Add this label to every entity that Object Monitor should watch. Usually keep device_monitoring.",
           "object_labels": "Labels that mean an object or location. Each monitored entity must have exactly one of these labels. One per line: home, restaurant, cafe.",
           "object_names": "How object labels should appear in events. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
-          "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. Leave empty if categories are not needed.",
+          "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. The script.tg_<object>_<category> package route requires a category label.",
           "category_names": "How category labels should appear in events. The left side must match Category labels. One per line: power=Power, security=Security.",
           "monitoring_timeout": "Fallback timeout used when an entity has no label such as timeout_20s, timeout_7m, or timeout_1h.",
           "heartbeat_interval": "Reserved for future heartbeat support. Set 0 to disable.",

@@ -1,5 +1,5 @@
 {
-  "name": "Object Monitor",
+  "name": "Object Event Monitor",
   "render_readme": true,
   "homeassistant": "2024.6.0",
   "iot_class": "Local Push"

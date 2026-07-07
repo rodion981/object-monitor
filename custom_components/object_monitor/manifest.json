@@ -1,6 +1,6 @@
 {
   "domain": "object_monitor",
-  "name": "Object Monitor",
+  "name": "Object Event Monitor",
   "codeowners": ["@rodion981"],
   "config_flow": true,
   "documentation": "https://github.com/rodion981/object-monitor",
@@ -8,5 +8,5 @@
   "integration_type": "hub",
   "iot_class": "local_push",
   "requirements": [],
-  "version": "0.2.5"
+  "version": "0.2.6"
 }

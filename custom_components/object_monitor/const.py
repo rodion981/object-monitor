@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "object_monitor"
-NAME: Final = "Object Monitor"
+NAME: Final = "Object Event Monitor"
 
 DEFAULT_NAME: Final = NAME
 DEFAULT_TIMEOUT_SECONDS: Final = 420

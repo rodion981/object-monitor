@@ -1,9 +1,9 @@
 {
-  "title": "Object Monitor",
+  "title": "Object Event Monitor",
   "config": {
     "step": {
       "user": {
-        "title": "Налаштування Object Monitor",
+        "title": "Налаштування Object Event Monitor",
         "description": "Вкажіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охорони використовуйте security_system, для on/off станів - state_monitor. Інтеграція генерує HA event object_monitor_event для ваших automations.",
         "data": {
           "monitoring_label": "Label, який вмикає моніторинг",
@@ -16,7 +16,7 @@
           "debug_logging": "Debug-логування"
         },
         "data_description": {
-          "monitoring_label": "Цей label треба додати на кожну entity, яку Object Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
+          "monitoring_label": "Цей label треба додати на кожну entity, яку Object Event Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
           "object_labels": "Список labels, які означають об'єкт або місце. Entity має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
           "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
           "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для package-маршруту script.tg_<object>_<category> category label потрібен.",
@@ -46,13 +46,13 @@
       "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій."
     },
     "abort": {
-      "single_instance_allowed": "Object Monitor уже налаштовано."
+      "single_instance_allowed": "Object Event Monitor уже налаштовано."
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Опції Object Monitor",
+        "title": "Опції Object Event Monitor",
         "description": "Оновіть, які Home Assistant labels відповідають за моніторинг, об'єкти та категорії подій. Для охорони використовуйте security_system, для on/off станів - state_monitor. Інтеграція генерує HA event object_monitor_event для ваших automations.",
         "data": {
           "monitoring_label": "Label, який вмикає моніторинг",
@@ -65,7 +65,7 @@
           "debug_logging": "Debug-логування"
         },
         "data_description": {
-          "monitoring_label": "Цей label треба додати на кожну entity, яку Object Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
+          "monitoring_label": "Цей label треба додати на кожну entity, яку Object Event Monitor має відстежувати. Зазвичай залишайте device_monitoring.",
           "object_labels": "Список labels, які означають об'єкт або місце. Entity має мати рівно один такий label. Пишіть по одному на рядок: home, restaurant, cafe.",
           "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
           "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для package-маршруту script.tg_<object>_<category> category label потрібен.",

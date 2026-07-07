@@ -1,0 +1,107 @@
+{
+  "title": "Object Event Monitor",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Object Event Monitor einrichten",
+        "description": "Wähle aus, welche Home-Assistant-Labels die Überwachung, Objekte und Ereigniskategorien steuern. Verwende security_system für Alarmzentralen und state_monitor für Ein/Aus-Zustände. Die Integration erzeugt das HA-Event object_monitor_event für deine Automationen.",
+        "data": {
+          "monitoring_label": "Label, das die Überwachung aktiviert",
+          "monitoring_timeout": "Standard-Timeout",
+          "object_labels": "Objekt-Labels",
+          "object_names": "Objektnamen in Ereignissen",
+          "category_labels": "Kategorie-Labels",
+          "category_names": "Kategorienamen in Ereignissen",
+          "heartbeat_interval": "Heartbeat-Intervall",
+          "debug_logging": "Debug-Protokollierung"
+        },
+        "data_description": {
+          "monitoring_label": "Füge dieses Label jeder Entity hinzu, die Object Event Monitor überwachen soll. Normalerweise device_monitoring beibehalten.",
+          "object_labels": "Labels, die ein Objekt oder einen Standort bezeichnen. Jede überwachte Entity muss genau eines dieser Labels haben. Ein Label pro Zeile: home, restaurant, cafe.",
+          "object_names": "Wie Objekt-Labels in Ereignissen angezeigt werden sollen. Die linke Seite muss mit den Objekt-Labels übereinstimmen. Ein Eintrag pro Zeile: home=Zuhause, restaurant=Restaurant.",
+          "category_labels": "Labels, die einen Problemtyp oder eine Ereigniskategorie bezeichnen. Ein Label pro Zeile: power, security, internet. Die Paketroute script.tg_<object>_<category> benötigt ein Kategorie-Label.",
+          "category_names": "Wie Kategorie-Labels in Ereignissen angezeigt werden sollen. Die linke Seite muss mit den Kategorie-Labels übereinstimmen. Ein Eintrag pro Zeile: power=Strom, security=Sicherheit.",
+          "monitoring_timeout": "Fallback-Timeout, wenn eine Entity kein Label wie timeout_20s, timeout_7m oder timeout_1h hat.",
+          "heartbeat_interval": "Für zukünftige Heartbeat-Unterstützung reserviert. Auf 0 setzen, um es zu deaktivieren.",
+          "debug_logging": "Zusätzliche Debug-Protokollierung für diese Integration aktivieren."
+        }
+      }
+    },
+    "error": {
+      "invalid_timeout": "Timeout muss eine positive Dauer sein.",
+      "timeout_too_large": "Timeout ist zu groß.",
+      "invalid_heartbeat_interval": "Heartbeat-Intervall muss 0 oder eine positive Zahl sein.",
+      "monitoring_label_required": "Ein Überwachungs-Label ist erforderlich.",
+      "invalid_monitoring_label": "Das Überwachungs-Label darf nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
+      "invalid_category_label": "Kategorie-Labels dürfen nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
+      "monitoring_category_overlap": "Das Überwachungs-Label darf nicht gleichzeitig ein Kategorie-Label sein.",
+      "monitoring_object_overlap": "Das Überwachungs-Label darf nicht gleichzeitig ein Objekt-Label sein.",
+      "category_object_overlap": "Dasselbe Label darf nicht gleichzeitig Kategorie-Label und Objekt-Label sein.",
+      "object_labels_required": "Mindestens ein Objekt-Label ist erforderlich.",
+      "invalid_object_label": "Objekt-Labels dürfen nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
+      "invalid_label_name_mapping": "Namen müssen im Format label=Name eingegeben werden, ein Eintrag pro Zeile.",
+      "invalid_label_name_label": "Ein Label im Namenswörterbuch darf nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
+      "unknown_object_name_label": "Objektnamen dürfen nur Labels aus dem Feld Objekt-Labels verwenden.",
+      "unknown_category_name_label": "Kategorienamen dürfen nur Labels aus dem Feld Kategorie-Labels verwenden.",
+      "reserved_object_label": "Objekt-Labels dürfen nicht mit dem Überwachungs-Label oder Kategorie-Labels übereinstimmen."
+    },
+    "abort": {
+      "single_instance_allowed": "Object Event Monitor ist bereits eingerichtet."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Object Event Monitor Optionen",
+        "description": "Aktualisiere, welche Home-Assistant-Labels die Überwachung, Objekte und Ereigniskategorien steuern. Verwende security_system für Alarmzentralen und state_monitor für Ein/Aus-Zustände. Die Integration erzeugt das HA-Event object_monitor_event für deine Automationen.",
+        "data": {
+          "monitoring_label": "Label, das die Überwachung aktiviert",
+          "monitoring_timeout": "Standard-Timeout",
+          "object_labels": "Objekt-Labels",
+          "object_names": "Objektnamen in Ereignissen",
+          "category_labels": "Kategorie-Labels",
+          "category_names": "Kategorienamen in Ereignissen",
+          "heartbeat_interval": "Heartbeat-Intervall",
+          "debug_logging": "Debug-Protokollierung"
+        },
+        "data_description": {
+          "monitoring_label": "Füge dieses Label jeder Entity hinzu, die Object Event Monitor überwachen soll. Normalerweise device_monitoring beibehalten.",
+          "object_labels": "Labels, die ein Objekt oder einen Standort bezeichnen. Jede überwachte Entity muss genau eines dieser Labels haben. Ein Label pro Zeile: home, restaurant, cafe.",
+          "object_names": "Wie Objekt-Labels in Ereignissen angezeigt werden sollen. Die linke Seite muss mit den Objekt-Labels übereinstimmen. Ein Eintrag pro Zeile: home=Zuhause, restaurant=Restaurant.",
+          "category_labels": "Labels, die einen Problemtyp oder eine Ereigniskategorie bezeichnen. Ein Label pro Zeile: power, security, internet. Die Paketroute script.tg_<object>_<category> benötigt ein Kategorie-Label.",
+          "category_names": "Wie Kategorie-Labels in Ereignissen angezeigt werden sollen. Die linke Seite muss mit den Kategorie-Labels übereinstimmen. Ein Eintrag pro Zeile: power=Strom, security=Sicherheit.",
+          "monitoring_timeout": "Fallback-Timeout, wenn eine Entity kein Label wie timeout_20s, timeout_7m oder timeout_1h hat.",
+          "heartbeat_interval": "Für zukünftige Heartbeat-Unterstützung reserviert. Auf 0 setzen, um es zu deaktivieren.",
+          "debug_logging": "Zusätzliche Debug-Protokollierung für diese Integration aktivieren."
+        }
+      }
+    },
+    "error": {
+      "invalid_timeout": "Timeout muss eine positive Dauer sein.",
+      "timeout_too_large": "Timeout ist zu groß.",
+      "invalid_heartbeat_interval": "Heartbeat-Intervall muss 0 oder eine positive Zahl sein.",
+      "monitoring_label_required": "Ein Überwachungs-Label ist erforderlich.",
+      "invalid_monitoring_label": "Das Überwachungs-Label darf nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
+      "invalid_category_label": "Kategorie-Labels dürfen nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
+      "monitoring_category_overlap": "Das Überwachungs-Label darf nicht gleichzeitig ein Kategorie-Label sein.",
+      "monitoring_object_overlap": "Das Überwachungs-Label darf nicht gleichzeitig ein Objekt-Label sein.",
+      "category_object_overlap": "Dasselbe Label darf nicht gleichzeitig Kategorie-Label und Objekt-Label sein.",
+      "object_labels_required": "Mindestens ein Objekt-Label ist erforderlich.",
+      "invalid_object_label": "Objekt-Labels dürfen nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
+      "invalid_label_name_mapping": "Namen müssen im Format label=Name eingegeben werden, ein Eintrag pro Zeile.",
+      "invalid_label_name_label": "Ein Label im Namenswörterbuch darf nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
+      "unknown_object_name_label": "Objektnamen dürfen nur Labels aus dem Feld Objekt-Labels verwenden.",
+      "unknown_category_name_label": "Kategorienamen dürfen nur Labels aus dem Feld Kategorie-Labels verwenden.",
+      "reserved_object_label": "Objekt-Labels dürfen nicht mit dem Überwachungs-Label oder Kategorie-Labels übereinstimmen."
+    }
+  },
+  "selector": {},
+  "exceptions": {
+    "unknown_object_label": {
+      "message": "Unbekanntes Objekt-Label: {object_label}."
+    },
+    "unknown_category_label": {
+      "message": "Unbekanntes Kategorie-Label: {category}."
+    }
+  }
+}

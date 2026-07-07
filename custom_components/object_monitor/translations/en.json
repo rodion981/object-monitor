@@ -1,9 +1,9 @@
 {
-  "title": "Object Monitor",
+  "title": "Object Event Monitor",
   "config": {
     "step": {
       "user": {
-        "title": "Set up Object Monitor",
+        "title": "Set up Object Event Monitor",
         "description": "Choose which Home Assistant labels control monitoring, objects, and event categories. Use security_system for alarm panels and state_monitor for on/off states. The integration emits the object_monitor_event HA event for your automations.",
         "data": {
           "monitoring_label": "Label that enables monitoring",
@@ -16,7 +16,7 @@
           "debug_logging": "Debug logging"
         },
         "data_description": {
-          "monitoring_label": "Add this label to every entity that Object Monitor should watch. Usually keep device_monitoring.",
+          "monitoring_label": "Add this label to every entity that Object Event Monitor should watch. Usually keep device_monitoring.",
           "object_labels": "Labels that mean an object or location. Each monitored entity must have exactly one of these labels. One per line: home, restaurant, cafe.",
           "object_names": "How object labels should appear in events. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
           "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. The script.tg_<object>_<category> package route requires a category label.",
@@ -46,13 +46,13 @@
       "reserved_object_label": "Object labels cannot match the monitoring label or category labels."
     },
     "abort": {
-      "single_instance_allowed": "Object Monitor is already configured."
+      "single_instance_allowed": "Object Event Monitor is already configured."
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Object Monitor options",
+        "title": "Object Event Monitor options",
         "description": "Update which Home Assistant labels control monitoring, objects, and event categories. Use security_system for alarm panels and state_monitor for on/off states. The integration emits the object_monitor_event HA event for your automations.",
         "data": {
           "monitoring_label": "Label that enables monitoring",
@@ -65,7 +65,7 @@
           "debug_logging": "Debug logging"
         },
         "data_description": {
-          "monitoring_label": "Add this label to every entity that Object Monitor should watch. Usually keep device_monitoring.",
+          "monitoring_label": "Add this label to every entity that Object Event Monitor should watch. Usually keep device_monitoring.",
           "object_labels": "Labels that mean an object or location. Each monitored entity must have exactly one of these labels. One per line: home, restaurant, cafe.",
           "object_names": "How object labels should appear in events. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
           "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. The script.tg_<object>_<category> package route requires a category label.",

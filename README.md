@@ -1,15 +1,28 @@
-# Object Monitor
+# Object Event Monitor
 
-Object Monitor is a Home Assistant custom integration for monitoring unavailable entities across multiple locations, sites, or customer objects and emitting Home Assistant events for automations.
+Object Event Monitor is a Home Assistant custom integration that turns label-selected entity changes into Home Assistant events for automations.
+
+It is useful for multi-site setups such as homes, cafes, restaurants, hotels, offices, warehouses, and other remote objects.
 
 The integration is event-driven and uses Home Assistant labels. Label roles are configurable in the integration options:
 
-- Monitoring label selects entities for monitoring. Default: `device_monitoring`.
+- Availability monitoring watches selected entities for `unavailable` and recovery states. Default label: `device_monitoring`.
 - Configured object labels, such as `home`, `restaurant`, or `cafe`, identify the monitored object.
 - Optional category labels can route automation logic. Defaults: `security`, `light`, `climate`.
 - Optional display names let events show human-friendly object and category names while labels remain stable Latin IDs.
 - Security systems can be monitored with the `security_system` label.
 - On/off state changes can be monitored with the `state_monitor` label.
+
+The integration does not call notification scripts directly. It emits
+`object_monitor_event`, and your Home Assistant automations decide how to notify
+people.
+
+Supported event types:
+
+- `offline`
+- `recovery`
+- `security_state`
+- `on_off_state`
 
 ## Installation with HACS
 
@@ -24,7 +37,7 @@ The integration is event-driven and uses Home Assistant labels. Label roles are 
    ```
 
 6. Select category **Integration**.
-7. Install **Object Monitor**.
+7. Install **Object Event Monitor**.
 8. Restart Home Assistant.
 
 ## Basic Setup
@@ -32,7 +45,7 @@ The integration is event-driven and uses Home Assistant labels. Label roles are 
 Add the integration from:
 
 ```text
-Settings -> Devices & services -> Add integration -> Object Monitor
+Settings -> Devices & services -> Add integration -> Object Event Monitor
 ```
 
 Configure label roles:
@@ -63,15 +76,11 @@ power=Power
 internet=Internet
 ```
 
-Object Monitor does not call notification scripts directly. It emits the
-`object_monitor_event` event and your Home Assistant automations decide how to
-deliver notifications.
-
 Automation trigger:
 
 ```yaml
-trigger:
-  - platform: event
+triggers:
+  - trigger: event
     event_type: object_monitor_event
 ```
 
@@ -100,7 +109,7 @@ timeout_7m
 timeout_1h
 ```
 
-Use only one timeout label per entity. If no timeout label is present, Object Monitor uses the default timeout from the integration options.
+Use only one timeout label per entity. If no timeout label is present, Object Event Monitor uses the default timeout from the integration options.
 
 ## Security System Monitoring
 
@@ -143,8 +152,6 @@ category: power
 previous_state: off
 state: on
 ```
-
-Version `v0.1.5` is the last release before security system monitoring and can be selected in HACS if you need to roll back.
 
 ## Services
 

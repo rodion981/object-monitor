@@ -17,6 +17,8 @@ DEFAULT_HEARTBEAT_INTERVAL_SECONDS: Final = 0
 DEFAULT_MONITORING_LABEL: Final = "device_monitoring"
 SECURITY_SYSTEM_LABEL: Final = "security_system"
 ON_OFF_MONITOR_LABEL: Final = "state_monitor"
+DEFAULT_ON_STATE_VALUES: Final[tuple[str, ...]] = ("on",)
+DEFAULT_OFF_STATE_VALUES: Final[tuple[str, ...]] = ("off",)
 
 CATEGORY_SECURITY: Final = "security"
 CATEGORY_LIGHT: Final = "light"
@@ -30,6 +32,8 @@ DEFAULT_CATEGORY_LABELS: Final[tuple[str, ...]] = (
 CONF_MONITORING_LABEL: Final = "monitoring_label"
 CONF_CATEGORY_LABELS: Final = "category_labels"
 CONF_OBJECT_NAMES: Final = "object_names"
+CONF_ON_STATE_VALUES: Final = "on_state_values"
+CONF_OFF_STATE_VALUES: Final = "off_state_values"
 CONF_CATEGORY_NAMES: Final = "category_names"
 CONF_MONITORING_TIMEOUT: Final = "monitoring_timeout"
 CONF_OBJECT_LABELS: Final = "object_labels"

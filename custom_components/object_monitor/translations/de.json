@@ -12,6 +12,8 @@
           "object_names": "Objektnamen in Ereignissen",
           "category_labels": "Kategorie-Labels",
           "category_names": "Kategorienamen in Ereignissen",
+          "on_state_values": "Benutzerdefinierte ON-Zustände",
+          "off_state_values": "Benutzerdefinierte OFF-Zustände",
           "heartbeat_interval": "Heartbeat-Intervall",
           "debug_logging": "Debug-Protokollierung"
         },
@@ -21,6 +23,8 @@
           "object_names": "Wie Objekt-Labels in Ereignissen angezeigt werden sollen. Die linke Seite muss mit den Objekt-Labels übereinstimmen. Ein Eintrag pro Zeile: home=Zuhause, restaurant=Restaurant.",
           "category_labels": "Labels, die einen Problemtyp oder eine Ereigniskategorie bezeichnen. Ein Label pro Zeile: power, security, internet. Die Paketroute script.tg_<object>_<category> benötigt ein Kategorie-Label.",
           "category_names": "Wie Kategorie-Labels in Ereignissen angezeigt werden sollen. Die linke Seite muss mit den Kategorie-Labels übereinstimmen. Ein Eintrag pro Zeile: power=Strom, security=Sicherheit.",
+          "on_state_values": "Entity-Zustände, die state_monitor als ON behandeln soll. Ein Wert pro Zeile oder durch Leerzeichen/Kommas getrennt. Standard: on.",
+          "off_state_values": "Entity-Zustände, die state_monitor als OFF behandeln soll. Ein Wert pro Zeile oder durch Leerzeichen/Kommas getrennt. Standard: off.",
           "monitoring_timeout": "Fallback-Timeout, wenn eine Entity kein Label wie timeout_20s, timeout_7m oder timeout_1h hat.",
           "heartbeat_interval": "Für zukünftige Heartbeat-Unterstützung reserviert. Auf 0 setzen, um es zu deaktivieren.",
           "debug_logging": "Zusätzliche Debug-Protokollierung für diese Integration aktivieren."
@@ -43,7 +47,10 @@
       "invalid_label_name_label": "Ein Label im Namenswörterbuch darf nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
       "unknown_object_name_label": "Objektnamen dürfen nur Labels aus dem Feld Objekt-Labels verwenden.",
       "unknown_category_name_label": "Kategorienamen dürfen nur Labels aus dem Feld Kategorie-Labels verwenden.",
-      "reserved_object_label": "Objekt-Labels dürfen nicht mit dem Überwachungs-Label oder Kategorie-Labels übereinstimmen."
+      "reserved_object_label": "Objekt-Labels dürfen nicht mit dem Überwachungs-Label oder Kategorie-Labels übereinstimmen.",
+      "on_state_values_required": "Mindestens ein ON-Zustand ist erforderlich.",
+      "off_state_values_required": "Mindestens ein OFF-Zustand ist erforderlich.",
+      "on_off_state_overlap": "ON- und OFF-Zustände dürfen sich nicht überschneiden."
     },
     "abort": {
       "single_instance_allowed": "Object Event Monitor ist bereits eingerichtet."
@@ -61,6 +68,8 @@
           "object_names": "Objektnamen in Ereignissen",
           "category_labels": "Kategorie-Labels",
           "category_names": "Kategorienamen in Ereignissen",
+          "on_state_values": "Benutzerdefinierte ON-Zustände",
+          "off_state_values": "Benutzerdefinierte OFF-Zustände",
           "heartbeat_interval": "Heartbeat-Intervall",
           "debug_logging": "Debug-Protokollierung"
         },
@@ -70,6 +79,8 @@
           "object_names": "Wie Objekt-Labels in Ereignissen angezeigt werden sollen. Die linke Seite muss mit den Objekt-Labels übereinstimmen. Ein Eintrag pro Zeile: home=Zuhause, restaurant=Restaurant.",
           "category_labels": "Labels, die einen Problemtyp oder eine Ereigniskategorie bezeichnen. Ein Label pro Zeile: power, security, internet. Die Paketroute script.tg_<object>_<category> benötigt ein Kategorie-Label.",
           "category_names": "Wie Kategorie-Labels in Ereignissen angezeigt werden sollen. Die linke Seite muss mit den Kategorie-Labels übereinstimmen. Ein Eintrag pro Zeile: power=Strom, security=Sicherheit.",
+          "on_state_values": "Entity-Zustände, die state_monitor als ON behandeln soll. Ein Wert pro Zeile oder durch Leerzeichen/Kommas getrennt. Standard: on.",
+          "off_state_values": "Entity-Zustände, die state_monitor als OFF behandeln soll. Ein Wert pro Zeile oder durch Leerzeichen/Kommas getrennt. Standard: off.",
           "monitoring_timeout": "Fallback-Timeout, wenn eine Entity kein Label wie timeout_20s, timeout_7m oder timeout_1h hat.",
           "heartbeat_interval": "Für zukünftige Heartbeat-Unterstützung reserviert. Auf 0 setzen, um es zu deaktivieren.",
           "debug_logging": "Zusätzliche Debug-Protokollierung für diese Integration aktivieren."
@@ -92,7 +103,10 @@
       "invalid_label_name_label": "Ein Label im Namenswörterbuch darf nur Kleinbuchstaben, Zahlen und Unterstriche enthalten.",
       "unknown_object_name_label": "Objektnamen dürfen nur Labels aus dem Feld Objekt-Labels verwenden.",
       "unknown_category_name_label": "Kategorienamen dürfen nur Labels aus dem Feld Kategorie-Labels verwenden.",
-      "reserved_object_label": "Objekt-Labels dürfen nicht mit dem Überwachungs-Label oder Kategorie-Labels übereinstimmen."
+      "reserved_object_label": "Objekt-Labels dürfen nicht mit dem Überwachungs-Label oder Kategorie-Labels übereinstimmen.",
+      "on_state_values_required": "Mindestens ein ON-Zustand ist erforderlich.",
+      "off_state_values_required": "Mindestens ein OFF-Zustand ist erforderlich.",
+      "on_off_state_overlap": "ON- und OFF-Zustände dürfen sich nicht überschneiden."
     }
   },
   "selector": {},

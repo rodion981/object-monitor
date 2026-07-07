@@ -17,12 +17,16 @@ from .const import (
     CONF_HEARTBEAT_INTERVAL,
     CONF_MONITORING_LABEL,
     CONF_MONITORING_TIMEOUT,
+    CONF_OFF_STATE_VALUES,
+    CONF_ON_STATE_VALUES,
     CONF_OBJECT_LABELS,
     CONF_OBJECT_NAMES,
     DEFAULT_CATEGORY_LABELS,
     DEFAULT_DEBUG_LOGGING,
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
     DEFAULT_MONITORING_LABEL,
+    DEFAULT_OFF_STATE_VALUES,
+    DEFAULT_ON_STATE_VALUES,
     DEFAULT_TIMEOUT_SECONDS,
     EVENT_OBJECT_MONITOR,
 )
@@ -172,6 +176,8 @@ class ObjectMonitorRuntime:
             "object_names": dict(self.config.object_names),
             "debug_logging": self.config.debug_logging,
             "category_names": dict(self.config.category_names),
+            "on_state_values": list(self.config.on_state_values),
+            "off_state_values": list(self.config.off_state_values),
             "heartbeat_interval": self.config.heartbeat_interval,
             "tracked_entities": len(entities),
             "pending_entities": self.tracker.pending_count
@@ -204,6 +210,12 @@ def build_monitor_config(options: Mapping[str, Any]) -> MonitorConfig:
         object_labels=tuple(options.get(CONF_OBJECT_LABELS, ())),
         object_names=dict(options.get(CONF_OBJECT_NAMES, {})),
         category_names=dict(options.get(CONF_CATEGORY_NAMES, {})),
+        on_state_values=tuple(
+            options.get(CONF_ON_STATE_VALUES, DEFAULT_ON_STATE_VALUES)
+        ),
+        off_state_values=tuple(
+            options.get(CONF_OFF_STATE_VALUES, DEFAULT_OFF_STATE_VALUES)
+        ),
         debug_logging=bool(options.get(CONF_DEBUG_LOGGING, DEFAULT_DEBUG_LOGGING)),
         heartbeat_interval=int(
             options.get(CONF_HEARTBEAT_INTERVAL, DEFAULT_HEARTBEAT_INTERVAL_SECONDS)

@@ -12,6 +12,8 @@ from .const import (
     DEFAULT_CATEGORY_LABELS,
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
     DEFAULT_MONITORING_LABEL,
+    DEFAULT_OFF_STATE_VALUES,
+    DEFAULT_ON_STATE_VALUES,
     DEFAULT_TIMEOUT_SECONDS,
     EVENT_TYPE_ON_OFF_STATE,
     EVENT_TYPE_SECURITY_STATE,
@@ -61,6 +63,8 @@ class MonitorConfig:
     object_labels: tuple[str, ...] = ()
     object_names: dict[str, str] = field(default_factory=dict)
     category_names: dict[str, str] = field(default_factory=dict)
+    on_state_values: tuple[str, ...] = DEFAULT_ON_STATE_VALUES
+    off_state_values: tuple[str, ...] = DEFAULT_OFF_STATE_VALUES
     debug_logging: bool = DEFAULT_DEBUG_LOGGING
     heartbeat_interval: int = DEFAULT_HEARTBEAT_INTERVAL_SECONDS
 

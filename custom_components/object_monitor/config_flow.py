@@ -19,6 +19,8 @@ from .const import (
     CONF_HEARTBEAT_INTERVAL,
     CONF_MONITORING_LABEL,
     CONF_MONITORING_TIMEOUT,
+    CONF_OFF_STATE_VALUES,
+    CONF_ON_STATE_VALUES,
     CONF_OBJECT_LABELS,
     CONF_OBJECT_NAMES,
     DEFAULT_CATEGORY_LABELS,
@@ -26,6 +28,8 @@ from .const import (
     DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
     DEFAULT_MONITORING_LABEL,
     DEFAULT_NAME,
+    DEFAULT_OFF_STATE_VALUES,
+    DEFAULT_ON_STATE_VALUES,
     DEFAULT_TIMEOUT_SECONDS,
     DOMAIN,
 )
@@ -147,6 +151,28 @@ def _build_options_schema(defaults: dict[str, Any] | None) -> vol.Schema:
                     multiline=True,
                 )
             ),
+            vol.Optional(
+                CONF_ON_STATE_VALUES,
+                default=defaults.get(
+                    CONF_ON_STATE_VALUES,
+                    "\n".join(DEFAULT_ON_STATE_VALUES),
+                ),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                )
+            ),
+            vol.Optional(
+                CONF_OFF_STATE_VALUES,
+                default=defaults.get(
+                    CONF_OFF_STATE_VALUES,
+                    "\n".join(DEFAULT_OFF_STATE_VALUES),
+                ),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    multiline=True,
+                )
+            ),
             vol.Required(
                 CONF_MONITORING_TIMEOUT,
                 default=defaults.get(
@@ -235,6 +261,21 @@ def _validate_user_input(
     elif set(category_names) - set(category_labels):
         errors[CONF_CATEGORY_NAMES] = "unknown_category_name_label"
 
+    on_state_values = _normalize_state_values(
+        user_input.get(CONF_ON_STATE_VALUES),
+        DEFAULT_ON_STATE_VALUES,
+    )
+    off_state_values = _normalize_state_values(
+        user_input.get(CONF_OFF_STATE_VALUES),
+        DEFAULT_OFF_STATE_VALUES,
+    )
+    if not on_state_values:
+        errors[CONF_ON_STATE_VALUES] = "on_state_values_required"
+    elif not off_state_values:
+        errors[CONF_OFF_STATE_VALUES] = "off_state_values_required"
+    elif set(on_state_values) & set(off_state_values):
+        errors[CONF_OFF_STATE_VALUES] = "on_off_state_overlap"
+
     options = {
         CONF_MONITORING_LABEL: monitoring_label or DEFAULT_MONITORING_LABEL,
         CONF_CATEGORY_LABELS: list(category_labels),
@@ -242,6 +283,8 @@ def _validate_user_input(
         CONF_OBJECT_LABELS: list(object_labels),
         CONF_OBJECT_NAMES: object_names,
         CONF_CATEGORY_NAMES: category_names,
+        CONF_ON_STATE_VALUES: list(on_state_values),
+        CONF_OFF_STATE_VALUES: list(off_state_values),
         CONF_HEARTBEAT_INTERVAL: heartbeat_interval
         if heartbeat_interval is not None
         else DEFAULT_HEARTBEAT_INTERVAL_SECONDS,
@@ -273,6 +316,12 @@ def _options_for_form(options: Mapping[str, Any]) -> dict[str, Any]:
         CONF_OBJECT_NAMES: _label_names_for_form(options.get(CONF_OBJECT_NAMES, {})),
         CONF_CATEGORY_NAMES: _label_names_for_form(
             options.get(CONF_CATEGORY_NAMES, {})
+        ),
+        CONF_ON_STATE_VALUES: "\n".join(
+            options.get(CONF_ON_STATE_VALUES, DEFAULT_ON_STATE_VALUES)
+        ),
+        CONF_OFF_STATE_VALUES: "\n".join(
+            options.get(CONF_OFF_STATE_VALUES, DEFAULT_OFF_STATE_VALUES)
         ),
         CONF_HEARTBEAT_INTERVAL: options.get(
             CONF_HEARTBEAT_INTERVAL,
@@ -312,6 +361,15 @@ def _normalize_labels(value: Any) -> tuple[str, ...]:
         seen.add(label)
 
     return tuple(labels)
+
+
+def _normalize_state_values(
+    value: Any,
+    default: tuple[str, ...],
+) -> tuple[str, ...]:
+    """Normalize custom state values while preserving user order."""
+    values = _normalize_labels(value)
+    return values or default
 
 
 def _normalize_label_names(value: Any) -> tuple[dict[str, str], str | None]:

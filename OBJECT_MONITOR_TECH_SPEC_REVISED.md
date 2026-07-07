@@ -208,6 +208,29 @@ Supported states:
 - `on`
 - `off`
 
+The default ON/OFF state values are configurable in the integration options.
+Default values are:
+
+```text
+ON: on
+OFF: off
+```
+
+Users may add localized or integration-specific values, for example:
+
+```text
+ON:
+on
+увімкнено
+
+OFF:
+off
+вимкнено
+```
+
+Object Monitor normalizes configured ON values to `state: on` and configured
+OFF values to `state: off` in emitted events.
+
 On startup, the current state is treated as the baseline and does not emit an event.
 
 When a selected entity changes from `off` to `on` or from `on` to `off`, Object Monitor emits:

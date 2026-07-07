@@ -26,7 +26,6 @@ _LOGGER = logging.getLogger(__name__)
 
 STATE_OFF = "off"
 STATE_ON = "on"
-ON_OFF_STATES = frozenset({STATE_OFF, STATE_ON})
 
 
 @dataclass(slots=True, frozen=True)
@@ -51,6 +50,10 @@ class OnOffMonitor:
         self._hass = hass
         self._config = config
         self._notification_manager = notification_manager
+        self._on_states = frozenset(value.lower() for value in config.on_state_values)
+        self._off_states = frozenset(
+            value.lower() for value in config.off_state_values
+        )
         self._last_states: dict[str, str] = {}
         self._unsubscribers: list[CALLBACK_TYPE] = []
         self._started = False
@@ -102,7 +105,7 @@ class OnOffMonitor:
             if entity is None:
                 continue
 
-            state = _on_off_state(self._hass.states.get(entity_id))
+            state = self._on_off_state(self._hass.states.get(entity_id))
             if state is None:
                 continue
 
@@ -133,14 +136,14 @@ class OnOffMonitor:
             return
 
         new_state = event.data.get("new_state")
-        state = _on_off_state(new_state)
+        state = self._on_off_state(new_state)
         if state is None:
             self._last_states.pop(entity_id, None)
             return
 
         previous_state = self._last_states.get(entity_id)
         if previous_state is None:
-            previous_state = _on_off_state(event.data.get("old_state"))
+            previous_state = self._on_off_state(event.data.get("old_state"))
 
         if previous_state == state:
             return
@@ -176,7 +179,7 @@ class OnOffMonitor:
     async def _async_reconcile_entity(self, entity_id: str) -> None:
         """Reconcile one on/off entity after registry metadata changes."""
         entity = self._resolve_entity_id(entity_id)
-        state = _on_off_state(self._hass.states.get(entity_id))
+        state = self._on_off_state(self._hass.states.get(entity_id))
         if entity is None or state is None:
             self._last_states.pop(entity_id, None)
             return
@@ -229,19 +232,24 @@ class OnOffMonitor:
             category=category_matches[0] if category_matches else None,
         )
 
+    def _on_off_state(self, state: Any) -> str | None:
+        """Return a configured on/off state from a Home Assistant state."""
+        if not isinstance(state, State):
+            return None
+
+        normalized_state = state.state.strip().lower()
+        if normalized_state in self._on_states:
+            return STATE_ON
+        if normalized_state in self._off_states:
+            return STATE_OFF
+
+        return None
+
 
 def _entry_labels(entry: Any) -> frozenset[str]:
     """Return normalized labels from an entity registry entry."""
     raw_labels = getattr(entry, "labels", set())
     return frozenset(label.strip().lower() for label in raw_labels if label.strip())
-
-
-def _on_off_state(state: Any) -> str | None:
-    """Return a supported on/off state from a Home Assistant state."""
-    if not isinstance(state, State):
-        return None
-
-    return state.state if state.state in ON_OFF_STATES else None
 
 
 def _friendly_name(hass: HomeAssistant, entity_id: str, state: Any) -> str:

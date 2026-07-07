@@ -12,6 +12,8 @@
           "object_names": "Назви об'єктів у подіях",
           "category_labels": "Labels категорій",
           "category_names": "Назви категорій у подіях",
+          "on_state_values": "Кастомні ON-стани",
+          "off_state_values": "Кастомні OFF-стани",
           "heartbeat_interval": "Інтервал heartbeat",
           "debug_logging": "Debug-логування"
         },
@@ -21,6 +23,8 @@
           "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
           "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для package-маршруту script.tg_<object>_<category> category label потрібен.",
           "category_names": "Як показувати категорії в подіях. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
+          "on_state_values": "Стани entity, які state_monitor має вважати ON. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: on.",
+          "off_state_values": "Стани entity, які state_monitor має вважати OFF. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: off.",
           "monitoring_timeout": "Базовий таймаут для всіх entity. Для конкретної entity можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
           "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
@@ -43,7 +47,10 @@
       "invalid_label_name_label": "Label у словнику назв може містити тільки малі латинські літери, цифри та underscores.",
       "unknown_object_name_label": "У назвах об'єктів можна використовувати тільки labels із поля Labels об'єктів.",
       "unknown_category_name_label": "У назвах категорій можна використовувати тільки labels із поля Labels категорій.",
-      "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій."
+      "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій.",
+      "on_state_values_required": "Потрібен хоча б один ON-стан.",
+      "off_state_values_required": "Потрібен хоча б один OFF-стан.",
+      "on_off_state_overlap": "ON-стани та OFF-стани не можуть перетинатися."
     },
     "abort": {
       "single_instance_allowed": "Object Event Monitor уже налаштовано."
@@ -61,6 +68,8 @@
           "object_names": "Назви об'єктів у подіях",
           "category_labels": "Labels категорій",
           "category_names": "Назви категорій у подіях",
+          "on_state_values": "Кастомні ON-стани",
+          "off_state_values": "Кастомні OFF-стани",
           "heartbeat_interval": "Інтервал heartbeat",
           "debug_logging": "Debug-логування"
         },
@@ -70,6 +79,8 @@
           "object_names": "Як показувати об'єкти в подіях. Ліва частина має збігатися з Labels об'єктів. Формат по рядках: home=Дім, restaurant=Ресторан.",
           "category_labels": "Список labels, які означають тип проблеми або категорію події. Пишіть по одному на рядок: power, security, internet. Для package-маршруту script.tg_<object>_<category> category label потрібен.",
           "category_names": "Як показувати категорії в подіях. Ліва частина має збігатися з Labels категорій. Формат по рядках: power=Живлення, security=Охорона.",
+          "on_state_values": "Стани entity, які state_monitor має вважати ON. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: on.",
+          "off_state_values": "Стани entity, які state_monitor має вважати OFF. Пишіть по одному на рядок або через пробіл/кому. За замовчуванням: off.",
           "monitoring_timeout": "Базовий таймаут для всіх entity. Для конкретної entity можна задати свій час окремим label: timeout_20s, timeout_7m або timeout_1h.",
           "heartbeat_interval": "Зарезервовано для майбутньої підтримки heartbeat. Встановіть 0, щоб вимкнути.",
           "debug_logging": "Увімкнути додаткове debug-логування для цієї інтеграції."
@@ -92,7 +103,10 @@
       "invalid_label_name_label": "Label у словнику назв може містити тільки малі латинські літери, цифри та underscores.",
       "unknown_object_name_label": "У назвах об'єктів можна використовувати тільки labels із поля Labels об'єктів.",
       "unknown_category_name_label": "У назвах категорій можна використовувати тільки labels із поля Labels категорій.",
-      "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій."
+      "reserved_object_label": "Labels об'єктів не можуть збігатися з label моніторингу або labels категорій.",
+      "on_state_values_required": "Потрібен хоча б один ON-стан.",
+      "off_state_values_required": "Потрібен хоча б один OFF-стан.",
+      "on_off_state_overlap": "ON-стани та OFF-стани не можуть перетинатися."
     }
   },
   "selector": {},

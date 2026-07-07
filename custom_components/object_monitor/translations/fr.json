@@ -12,6 +12,8 @@
           "object_names": "Noms des objets dans les événements",
           "category_labels": "Labels de catégories",
           "category_names": "Noms des catégories dans les événements",
+          "on_state_values": "États ON personnalisés",
+          "off_state_values": "États OFF personnalisés",
           "heartbeat_interval": "Intervalle heartbeat",
           "debug_logging": "Journalisation debug"
         },
@@ -21,6 +23,8 @@
           "object_names": "Comment afficher les labels d'objets dans les événements. La partie gauche doit correspondre aux labels d'objets. Un par ligne : home=Maison, restaurant=Restaurant.",
           "category_labels": "Labels qui représentent un type de problème ou une catégorie d'événement. Un par ligne : power, security, internet. La route du package script.tg_<object>_<category> nécessite un label de catégorie.",
           "category_names": "Comment afficher les labels de catégories dans les événements. La partie gauche doit correspondre aux labels de catégories. Un par ligne : power=Alimentation, security=Sécurité.",
+          "on_state_values": "États d'entité que state_monitor doit traiter comme ON. Un par ligne ou séparés par des espaces/virgules. Par défaut : on.",
+          "off_state_values": "États d'entité que state_monitor doit traiter comme OFF. Un par ligne ou séparés par des espaces/virgules. Par défaut : off.",
           "monitoring_timeout": "Timeout de secours utilisé lorsqu'une entité n'a pas de label comme timeout_20s, timeout_7m ou timeout_1h.",
           "heartbeat_interval": "Réservé à une future prise en charge du heartbeat. Définissez 0 pour le désactiver.",
           "debug_logging": "Activer une journalisation debug supplémentaire pour cette intégration."
@@ -43,7 +47,10 @@
       "invalid_label_name_label": "Un label dans le dictionnaire de noms ne peut contenir que des lettres minuscules, des chiffres et des underscores.",
       "unknown_object_name_label": "Les noms d'objets ne peuvent utiliser que les labels du champ Labels d'objets.",
       "unknown_category_name_label": "Les noms de catégories ne peuvent utiliser que les labels du champ Labels de catégories.",
-      "reserved_object_label": "Les labels d'objets ne peuvent pas correspondre au label de surveillance ou aux labels de catégories."
+      "reserved_object_label": "Les labels d'objets ne peuvent pas correspondre au label de surveillance ou aux labels de catégories.",
+      "on_state_values_required": "Au moins un état ON est requis.",
+      "off_state_values_required": "Au moins un état OFF est requis.",
+      "on_off_state_overlap": "Les états ON et OFF ne peuvent pas se chevaucher."
     },
     "abort": {
       "single_instance_allowed": "Object Event Monitor est déjà configuré."
@@ -61,6 +68,8 @@
           "object_names": "Noms des objets dans les événements",
           "category_labels": "Labels de catégories",
           "category_names": "Noms des catégories dans les événements",
+          "on_state_values": "États ON personnalisés",
+          "off_state_values": "États OFF personnalisés",
           "heartbeat_interval": "Intervalle heartbeat",
           "debug_logging": "Journalisation debug"
         },
@@ -70,6 +79,8 @@
           "object_names": "Comment afficher les labels d'objets dans les événements. La partie gauche doit correspondre aux labels d'objets. Un par ligne : home=Maison, restaurant=Restaurant.",
           "category_labels": "Labels qui représentent un type de problème ou une catégorie d'événement. Un par ligne : power, security, internet. La route du package script.tg_<object>_<category> nécessite un label de catégorie.",
           "category_names": "Comment afficher les labels de catégories dans les événements. La partie gauche doit correspondre aux labels de catégories. Un par ligne : power=Alimentation, security=Sécurité.",
+          "on_state_values": "États d'entité que state_monitor doit traiter comme ON. Un par ligne ou séparés par des espaces/virgules. Par défaut : on.",
+          "off_state_values": "États d'entité que state_monitor doit traiter comme OFF. Un par ligne ou séparés par des espaces/virgules. Par défaut : off.",
           "monitoring_timeout": "Timeout de secours utilisé lorsqu'une entité n'a pas de label comme timeout_20s, timeout_7m ou timeout_1h.",
           "heartbeat_interval": "Réservé à une future prise en charge du heartbeat. Définissez 0 pour le désactiver.",
           "debug_logging": "Activer une journalisation debug supplémentaire pour cette intégration."
@@ -92,7 +103,10 @@
       "invalid_label_name_label": "Un label dans le dictionnaire de noms ne peut contenir que des lettres minuscules, des chiffres et des underscores.",
       "unknown_object_name_label": "Les noms d'objets ne peuvent utiliser que les labels du champ Labels d'objets.",
       "unknown_category_name_label": "Les noms de catégories ne peuvent utiliser que les labels du champ Labels de catégories.",
-      "reserved_object_label": "Les labels d'objets ne peuvent pas correspondre au label de surveillance ou aux labels de catégories."
+      "reserved_object_label": "Les labels d'objets ne peuvent pas correspondre au label de surveillance ou aux labels de catégories.",
+      "on_state_values_required": "Au moins un état ON est requis.",
+      "off_state_values_required": "Au moins un état OFF est requis.",
+      "on_off_state_overlap": "Les états ON et OFF ne peuvent pas se chevaucher."
     }
   },
   "selector": {},

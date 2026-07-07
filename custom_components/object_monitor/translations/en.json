@@ -12,6 +12,8 @@
           "object_names": "Object names in events",
           "category_labels": "Category labels",
           "category_names": "Category names in events",
+          "on_state_values": "Custom ON state values",
+          "off_state_values": "Custom OFF state values",
           "heartbeat_interval": "Heartbeat interval",
           "debug_logging": "Debug logging"
         },
@@ -21,6 +23,8 @@
           "object_names": "How object labels should appear in events. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
           "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. The script.tg_<object>_<category> package route requires a category label.",
           "category_names": "How category labels should appear in events. The left side must match Category labels. One per line: power=Power, security=Security.",
+          "on_state_values": "Entity states that should be treated as ON for state_monitor. One per line or separated by spaces/commas. Default: on.",
+          "off_state_values": "Entity states that should be treated as OFF for state_monitor. One per line or separated by spaces/commas. Default: off.",
           "monitoring_timeout": "Fallback timeout used when an entity has no label such as timeout_20s, timeout_7m, or timeout_1h.",
           "heartbeat_interval": "Reserved for future heartbeat support. Set 0 to disable.",
           "debug_logging": "Enable additional debug logging for this integration."
@@ -43,7 +47,10 @@
       "invalid_label_name_label": "A label in the name dictionary may contain only lowercase letters, numbers, and underscores.",
       "unknown_object_name_label": "Object names can only use labels from the Object labels field.",
       "unknown_category_name_label": "Category names can only use labels from the Category labels field.",
-      "reserved_object_label": "Object labels cannot match the monitoring label or category labels."
+      "reserved_object_label": "Object labels cannot match the monitoring label or category labels.",
+      "on_state_values_required": "At least one ON state value is required.",
+      "off_state_values_required": "At least one OFF state value is required.",
+      "on_off_state_overlap": "ON and OFF state values cannot overlap."
     },
     "abort": {
       "single_instance_allowed": "Object Event Monitor is already configured."
@@ -61,6 +68,8 @@
           "object_names": "Object names in events",
           "category_labels": "Category labels",
           "category_names": "Category names in events",
+          "on_state_values": "Custom ON state values",
+          "off_state_values": "Custom OFF state values",
           "heartbeat_interval": "Heartbeat interval",
           "debug_logging": "Debug logging"
         },
@@ -70,6 +79,8 @@
           "object_names": "How object labels should appear in events. The left side must match Object labels. One per line: home=Home, restaurant=Restaurant.",
           "category_labels": "Labels that mean a problem type or event category. One per line: power, security, internet. The script.tg_<object>_<category> package route requires a category label.",
           "category_names": "How category labels should appear in events. The left side must match Category labels. One per line: power=Power, security=Security.",
+          "on_state_values": "Entity states that should be treated as ON for state_monitor. One per line or separated by spaces/commas. Default: on.",
+          "off_state_values": "Entity states that should be treated as OFF for state_monitor. One per line or separated by spaces/commas. Default: off.",
           "monitoring_timeout": "Fallback timeout used when an entity has no label such as timeout_20s, timeout_7m, or timeout_1h.",
           "heartbeat_interval": "Reserved for future heartbeat support. Set 0 to disable.",
           "debug_logging": "Enable additional debug logging for this integration."
@@ -92,7 +103,10 @@
       "invalid_label_name_label": "A label in the name dictionary may contain only lowercase letters, numbers, and underscores.",
       "unknown_object_name_label": "Object names can only use labels from the Object labels field.",
       "unknown_category_name_label": "Category names can only use labels from the Category labels field.",
-      "reserved_object_label": "Object labels cannot match the monitoring label or category labels."
+      "reserved_object_label": "Object labels cannot match the monitoring label or category labels.",
+      "on_state_values_required": "At least one ON state value is required.",
+      "off_state_values_required": "At least one OFF state value is required.",
+      "on_off_state_overlap": "ON and OFF state values cannot overlap."
     }
   },
   "selector": {},

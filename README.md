@@ -153,6 +153,22 @@ previous_state: off
 state: on
 ```
 
+If an entity uses custom state values, configure them in the integration
+options:
+
+```text
+Custom ON state values:
+on
+увімкнено
+
+Custom OFF state values:
+off
+вимкнено
+```
+
+The emitted event still uses normalized `state: on` or `state: off`, so
+automations stay stable.
+
 ## Services
 
 The integration provides:
